@@ -1,10 +1,20 @@
-Project Name
+Détection des anomalies acoustiques et vibratoires des moteurs électriques
 ==============================
 
 This project is a starting Pack for MLOps projects based on the subject "movie_recommandation". It's not perfect so feel free to make some modifications on it.
 
-Project Organization
-------------
+## Equipe projet
+
+- Ludovic ANDRIEUX
+- Matthieu CLAUDEL ([GitHub](https://github.com/matthieuclaudel) / [LinkedIn](http://www.linkedin.com/in/matthieu-claudel-8a927857))
+- Adrien PINEL
+- Harold MOUKALA MITATI
+
+## Architecture de l'application
+
+SCHEMA à mettre
+
+## Repository Tree
 
     ├── LICENSE
     ├── README.md          <- The top-level README for developers using this project.
