@@ -60,4 +60,11 @@ SCHEMA à mettre
 
 --------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+## Installation
+## 🎬 Getting Started for Developers
+
+```shell
+git clone https://github.com/matthieuclaudel/MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques
+```
+
+
