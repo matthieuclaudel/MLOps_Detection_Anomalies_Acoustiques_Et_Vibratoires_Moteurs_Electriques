@@ -7,7 +7,7 @@ This project is a starting Pack for MLOps projects based on the subject "movie_r
 
 - Ludovic ANDRIEUX
 - Matthieu CLAUDEL ([GitHub](https://github.com/matthieuclaudel) / [LinkedIn](http://www.linkedin.com/in/matthieu-claudel-8a927857))
-- Adrien PINEL
+- Adrien PINEL [GitHub](https://github.com/Adriencalvados)
 - Harold MOUKALA MITATI
 
 ## Architecture de l'application
