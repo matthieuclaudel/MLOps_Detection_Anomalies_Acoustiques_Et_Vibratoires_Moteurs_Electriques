@@ -5,7 +5,7 @@ This project is a starting Pack for MLOps projects based on the subject "movie_r
 
 ## Equipe projet
 
-- Ludovic ANDRIEUX
+- Ludovic ANDRIEUX [GitHub](https://github.com/ludodo23)
 - Matthieu CLAUDEL ([GitHub](https://github.com/matthieuclaudel) / [LinkedIn](http://www.linkedin.com/in/matthieu-claudel-8a927857))
 - Adrien PINEL [GitHub](https://github.com/Adriencalvados)
 - Harold MOUKALA MITATI
