@@ -12,7 +12,7 @@ This project is a starting Pack for MLOps projects based on the subject "movie_r
 
 ## Architecture de l'application
 
-SCHEMA à mettre
+![Architecture](./data/Archi.png)
 
 ## Repository Tree
 
