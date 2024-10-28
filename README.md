@@ -1,7 +1,7 @@
 Détection des anomalies acoustiques et vibratoires des moteurs électriques
 ==============================
 
-This project is a starting Pack for MLOps projects based on the subject "movie_recommandation". It's not perfect so feel free to make some modifications on it.
+L'objectif de ce projet est d'automatiser la détection d'anomalies sur des moteurs électriques à la sortie d'une chaîne de production.
 
 ## Equipe projet
 
