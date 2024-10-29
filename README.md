@@ -1,18 +1,18 @@
 Détection des anomalies acoustiques et vibratoires des moteurs électriques
 ==============================
 
-This project is a starting Pack for MLOps projects based on the subject "movie_recommandation". It's not perfect so feel free to make some modifications on it.
+L'objectif de ce projet est d'automatiser la détection d'anomalies sur des moteurs électriques à la sortie d'une chaîne de production.
 
 ## Equipe projet
 
 - Ludovic ANDRIEUX [GitHub](https://github.com/ludodo23)
 - Matthieu CLAUDEL ([GitHub](https://github.com/matthieuclaudel) / [LinkedIn](http://www.linkedin.com/in/matthieu-claudel-8a927857))
 - Adrien PINEL [GitHub](https://github.com/Adriencalvados)
-- Harold MOUKALA MITATI
+- Harold MOUKALA MITATI [GitHub](https://github.com/Ngulumanua)
 
 ## Architecture de l'application
 
-SCHEMA à mettre
+![Architecture](./data/Archi.png)
 
 ## Repository Tree
 
