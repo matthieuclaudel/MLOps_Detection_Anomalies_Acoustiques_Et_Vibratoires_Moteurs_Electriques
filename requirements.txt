@@ -1,1 +1,12 @@
-
+dvc
+matplotlib
+seaborn
+pandas
+numpy
+seaborn
+matplotlib
+plotly
+umap-learn
+scikit-learn
+dvc[s3]
+fastds
