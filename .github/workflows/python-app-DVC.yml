@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.10
+    - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
@@ -36,7 +36,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run make_dataset with secret argument.
       env:
-        TOKEN_DVC: ${{ secrets.access_key_dvc}}
+        TOKEN_DVC: ${{ secrets.ACCESS_KEY_DVC}}
       run: |
         python src/data/make_dataset.py --secret "$TOKEN_DVC"
     
