@@ -8,13 +8,13 @@ Auteur : Pinel.A
 Date : 2024-11-04
 """
 
-import sys, subprocess,shutil,os,logging,inspect
+
+
+import sys, subprocess, os, logging, inspect
 import pandas as pd
-import numpy as np
-from pathlib import Path
 from sklearn.model_selection import train_test_split
 # Fonctions
-def pull_data_with_dvc(logger):
+def pull_data_with_dvc(logger) :
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     cmd = [sys.executable, "-m", "dvc", "pull"]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -25,7 +25,7 @@ def pull_data_with_dvc(logger):
         logger.info("extract NOK")
         logger.info(result.stderr)
     return result.returncode
-          
+
 def modifconfigsecret(file_path,secret,logger) :
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     chemin_fichier = file_path+"config.local"
@@ -39,16 +39,16 @@ def modifconfigsecret(file_path,secret,logger) :
         # Création du fichier et écriture du contenu
         with open(chemin_fichier, "w") as fichier:
             result=fichier.write(contenu)
-            logger.info("credentials : ",result)
+            logger.info("credentials pass")
         return result
 
-def import_dataset(logger,file_path, **kwargs):
+def import_dataset(logger,file_path, **kwargs) :
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     df_go = pd.read_csv(file_path+'/DATASET_GO_NG.csv', **kwargs)
     df_go.target=-1
     logger.info(f"df all nbre de lignes :{len(df_go)}")
     df_ng= pd.read_csv(file_path+'/DATASET_NG.csv', **kwargs)
-    df_all=pd.concat([df_go,df_ng])
+    df_all=pd.concat([df_go, df_ng])
     logger.info(f"df test nbre de lignes :{len(df_ng)}")
     return df_all,df_ng
     
@@ -66,14 +66,14 @@ def create_folder_if_necessary(output_folderpath):
     if os.path.exists(output_folderpath)==False:
         os.makedirs(output_folderpath)
 
-def save_dataframes(X_train, X_test, y_train, y_test, output_folderpath):
+def save_dataframes(X_train, X_test, y_train, y_test, output_folderpath) :
     # Save dataframes to their respective output file paths
     for file, filename in zip([X_train, X_test, y_train, y_test], ['X_train', 'X_test', 'y_train', 'y_test']):
         output_filepath = os.path.join(output_folderpath, f'{filename}.csv')
         file.to_csv(output_filepath, index=False)
         
 # Fonction principale
-def main(input_filepath='./data/raw', output_filepath='./data/interim'):
+def main(input_filepath='./data/raw', output_filepath='./data/interim') :
     """
     Point d'entrée principal du programme.
     Runs data processing scripts to turn raw data from (../raw) into
@@ -109,7 +109,7 @@ def main(input_filepath='./data/raw', output_filepath='./data/interim'):
     logger.info('make interim data set')
 
 # Bloc pour lancer le script en tant que programme principal
-if __name__ == "__main__":
+if __name__ == "__main__" :
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
     main()
