@@ -83,7 +83,7 @@ def main(input_filepath='./data/raw', output_filepath='./data/interim') :
     logger.info('making data set from raw data')
     # Récupérer les arguments de la ligne de commande
     if len(sys.argv) > 1:
-        secret = str(sys.argv[1])  # Convertir le 1er argument en entier
+        secret = str(sys.argv[1])  # Convertir le 1er argument
     else:
         logger.info("Veuillez fournir un paramètre str en argument.")
         sys.exit(1)

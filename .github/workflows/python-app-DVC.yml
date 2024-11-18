@@ -38,7 +38,7 @@ jobs:
       env:
         TOKEN_DVC: ${{ secrets.ACCESS_KEY_DVC}}
       run: |
-        python src/data/make_dataset.py --secret "$TOKEN_DVC"
+        python src/data/make_dataset.py $TOKEN_DVC
     
     - name: Run build_features
       run: |
