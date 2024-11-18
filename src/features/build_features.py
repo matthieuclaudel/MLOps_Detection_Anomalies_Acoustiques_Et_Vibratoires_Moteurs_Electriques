@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
-import umap.umap_ as umap
 import logging,pickle
 from sklearn.preprocessing import StandardScaler
 import os,inspect
@@ -18,12 +17,12 @@ def main(input_filepath='./data/interim', output_filepath='./data/processed') :
     fX_train = f"{input_filepath}/X_train.csv"
     f_ytrain = f"{input_filepath}/y_train.csv"
     f_ytest = f"{input_filepath}/y_test.csv"
-    process_data(fX_test, fX_train, output_filepath,f_ytrain,f_ytest)
+    process_data(fX_test, fX_train, output_filepath, f_ytrain,f_ytest)
 
-def process_data(fX_test, fX_train, output_filepath,f_ytrain,f_ytest) :
+def process_data(fX_test, fX_train, output_filepath, f_ytrain,f_ytest) :
     # Import datasets
-    X_test = import_dataset(fX_test).drop(columns=["moyenne","ecartype","mediane","min","max"])
-    X_train = import_dataset(fX_train).drop(columns=["moyenne","ecartype","mediane","min","max"])
+    X_test = import_dataset(fX_test).drop(columns=["moyenne", "ecartype", "mediane", "min", "max"])
+    X_train = import_dataset(fX_train).drop(columns=["moyenne", "ecartype", "mediane", "min", "max"])
     y_train = import_dataset(f_ytrain).fillna(10000).astype(int)
     y_test = import_dataset(f_ytest).astype(int)
     # Remplacement des valeurs entre 1 et 99 inclus par -1
@@ -41,7 +40,7 @@ def process_data(fX_test, fX_train, output_filepath,f_ytrain,f_ytest) :
     create_folder_if_necessary(output_filepath)
 
     # Save dataframes to their respective output file paths
-    save_dataframes(X_train_scaled, X_test_scaled, output_filepath,y_train,y_test)
+    save_dataframes(X_train_scaled, X_test_scaled, output_filepath, y_train, y_test)
 
 def import_dataset(file_path, **kwargs) :    
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
@@ -55,11 +54,11 @@ def create_folder_if_necessary(output_folderpath) :
     if os.path.exists(output_folderpath)==False:
         os.makedirs(output_folderpath)
 
-def save_dataframes(X_train_scaled, X_test_scaled, output_folderpath,y_train,y_test) :
+def save_dataframes(X_train_scaled, X_test_scaled, output_folderpath, y_train,y_test) :
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     logger.info('save dataframes')
     # Save dataframes to their respective output file paths
-    for file, filename in zip([X_train_scaled, X_test_scaled,y_train,y_test], ['X_train_scaled', 'X_test_scaled','y_train','y_test']) :
+    for file, filename in zip([X_train_scaled, X_test_scaled, y_train,y_test], ['X_train_scaled', 'X_test_scaled','y_train','y_test']) :
         output_filepath = os.path.join(output_folderpath, f'{filename}.csv')
         #file.to_csv(output_filepath, index=False)
         np.savetxt(output_filepath, file, delimiter=",")

@@ -13,10 +13,36 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  run-shell-command:
     runs-on: ubuntu-latest
-
+    steps:
+      - name: python commands
+        run: |
+          import platform
+          print(platform.processor())
+        shell: python
+  run-windows-command:
+    runs-on: windows-latest
+    needs: ["run-shell-command"]
+    steps:
+      - name: current directory with powershell
+        run: Get-Location
+      - name: current directory with bash
+        run: pwd
+        shell: bash
+      - name: print some default env variables
+        run: |
+          echo "HOME: ${HOME}"
+          echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+          echo "GITHUB_ACTION: ${GITHUB_ACTION}"
+          echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
+          echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+        shell: bash
+  build:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.11
@@ -28,6 +54,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+  data:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -38,7 +68,11 @@ jobs:
       env:
         TOKEN_DVC: ${{ secrets.ACCESS_KEY_DVC}}
       run: |
-        python src/data/make_dataset.py $TOKEN_DVC  
+        python src/data/make_dataset.py $TOKEN_DVC
+  model:
+    needs: [build,data]
+    runs-on: ubuntu-latest
+    steps:  
     - name: Run build_features
       run: |
         python src/features/build_features.py

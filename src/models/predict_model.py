@@ -36,9 +36,9 @@ print("Modèle chargé avec succès !")
 y_pred = loaded_model.predict(X_test)
 y_pred[y_pred == 1] = 0
 
-print("somme ypred",np.abs(y_pred.sum()),", somme y_test",np.abs(y_test.sum()))
-print("moy acc",(np.abs(y_pred.sum())/np.abs(y_test.sum()))*100,"%")
-print("Rapport de classification : \n",classification_report(y_test,y_pred),"\n")
+print("somme ypred", np.abs(y_pred.sum()), ", somme y_test",np.abs(y_test.sum()))
+print("moy acc", (np.abs(y_pred.sum())/np.abs(y_test.sum()))*100,"%")
+print("Rapport de classification : \n", classification_report(y_test,y_pred), "\n")
 # Sauvegarder les prédictions et les vraies valeurs dans un nouveau fichier CSV
 predictions_df =y_test
 predictions_df["y_pred"]=y_pred
