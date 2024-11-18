@@ -41,7 +41,8 @@ jobs:
           echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
           echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
         shell: bash
-  build:
+  setup-and-test:
+    name: Setup Environment and Run Tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -54,24 +55,31 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-  data:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  Import_data:
+    name: Import data
+    runs-on: ubuntu-latest
+    needs: setup-and-test
+
+    steps:
     - name: Run make_dataset with secret argument.
       env:
         TOKEN_DVC: ${{ secrets.ACCESS_KEY_DVC}}
       run: |
         python src/data/make_dataset.py $TOKEN_DVC
-  model:
-    needs: [build,data]
+
+  train-model:
+    name: Train Model
     runs-on: ubuntu-latest
+    needs: Import_data
+
+
     steps:  
     - name: Run build_features
       run: |
