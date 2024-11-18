@@ -45,11 +45,16 @@ jobs:
     name: Setup Environment and Run Tests
     runs-on: ubuntu-latest
     steps:
+    # Étape 1 : Checkout du code
     - uses: actions/checkout@v4
+
+    # Étape 2 : Installer Python
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
+
+    # Étape 3 : Installer les dépendances
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -68,6 +73,8 @@ jobs:
     needs: setup-and-test
 
     steps:
+    # Étape 1 : Checkout du code
+    - uses: actions/checkout@v4
     - name: Run make_dataset with secret argument.
       env:
         TOKEN_DVC: ${{ secrets.ACCESS_KEY_DVC}}
@@ -80,7 +87,9 @@ jobs:
     needs: Import_data
 
 
-    steps:  
+    steps:
+      # Étape 1 : Checkout du code
+    - uses: actions/checkout@v4
     - name: Run build_features
       run: |
         python src/features/build_features.py
