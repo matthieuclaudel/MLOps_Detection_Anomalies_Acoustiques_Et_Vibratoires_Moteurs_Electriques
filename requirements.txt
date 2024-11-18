@@ -10,5 +10,4 @@ umap-learn
 scikit-learn==1.5
 dvc[s3]
 fastds
-pickle5
 dagshub
