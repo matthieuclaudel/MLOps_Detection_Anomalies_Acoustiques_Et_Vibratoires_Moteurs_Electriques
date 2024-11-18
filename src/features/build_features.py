@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Nom du fichier : build_features.py
+Description : 
+Auteur : Pinel.A
+Date : 2024-11-04
+"""
+
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -5,7 +15,7 @@ import logging,pickle
 from sklearn.preprocessing import StandardScaler
 import os,inspect
 
-def main(input_filepath='./data/interim', output_filepath='./data/processed') :
+def main(input_filepath='./data/interim', output_filepath='./data/processed'):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in../preprocessed).
     """
@@ -19,7 +29,7 @@ def main(input_filepath='./data/interim', output_filepath='./data/processed') :
     f_ytest = f"{input_filepath}/y_test.csv"
     process_data(fX_test, fX_train, output_filepath, f_ytrain,f_ytest)
 
-def process_data(fX_test, fX_train, output_filepath, f_ytrain,f_ytest) :
+def process_data(fX_test, fX_train, output_filepath, f_ytrain,f_ytest):
     # Import datasets
     X_test = import_dataset(fX_test).drop(columns=["moyenne", "ecartype", "mediane", "min", "max"])
     X_train = import_dataset(fX_train).drop(columns=["moyenne", "ecartype", "mediane", "min", "max"])
@@ -31,8 +41,8 @@ def process_data(fX_test, fX_train, output_filepath, f_ytrain,f_ytest) :
     #StandardScaler
     scaler = StandardScaler()
     print(X_train.head(2))
-    X_train_scaled=scaler.fit_transform(X_train)
-    X_test_scaled=scaler.transform(X_test)
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
     model_filename = 'models/trained_SC_model.pkl'
     with open(model_filename, 'wb') as file:
        pickle.dump(scaler, file)
@@ -54,13 +64,12 @@ def create_folder_if_necessary(output_folderpath) :
     if os.path.exists(output_folderpath)==False:
         os.makedirs(output_folderpath)
 
-def save_dataframes(X_train_scaled, X_test_scaled, output_folderpath, y_train,y_test) :
+def save_dataframes(X_train_scaled, X_test_scaled, output_folderpath, y_train,y_test):
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     logger.info('save dataframes')
     # Save dataframes to their respective output file paths
     for file, filename in zip([X_train_scaled, X_test_scaled, y_train,y_test], ['X_train_scaled', 'X_test_scaled','y_train','y_test']) :
         output_filepath = os.path.join(output_folderpath, f'{filename}.csv')
-        #file.to_csv(output_filepath, index=False)
         np.savetxt(output_filepath, file, delimiter=",")
     for file, filename in zip([y_train,y_test], ['y_train','y_test']) :
         output_filepath = os.path.join(output_folderpath, f'{filename}.csv')
@@ -73,4 +82,4 @@ if __name__ == '__main__' :
     # not used in this stub but often useful for finding various files
     project_dir = Path(__file__).resolve().parents[2]
 
-    main()    
+    main()
