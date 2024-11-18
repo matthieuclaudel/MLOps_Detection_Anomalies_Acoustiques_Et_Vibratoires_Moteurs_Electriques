@@ -38,8 +38,13 @@ jobs:
       env:
         TOKEN_DVC: ${{ secrets.ACCESS_KEY_DVC}}
       run: |
-        python src/data/make_dataset.py $TOKEN_DVC
-    
+        python src/data/make_dataset.py $TOKEN_DVC  
     - name: Run build_features
       run: |
         python src/features/build_features.py
+    - name: Run train_model
+      run: |
+        python src/models/train_model.py
+    - name: Run predict_model
+      run: |
+        python src/models/predict_model.py

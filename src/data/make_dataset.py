@@ -8,10 +8,9 @@ Auteur : Pinel.A
 Date : 2024-11-04
 """
 
-
-
 import sys, subprocess, os, logging, inspect
 import pandas as pd
+from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 # Fonctions
 def pull_data_with_dvc(logger) :
@@ -45,20 +44,33 @@ def modifconfigsecret(file_path,secret,logger) :
 def import_dataset(logger,file_path, **kwargs) :
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     df_go = pd.read_csv(file_path+'/DATASET_GO_NG.csv', **kwargs)
-    df_go.target=-1
     logger.info(f"df all nbre de lignes :{len(df_go)}")
     df_ng= pd.read_csv(file_path+'/DATASET_NG.csv', **kwargs)
-    df_all=pd.concat([df_go, df_ng])
     logger.info(f"df test nbre de lignes :{len(df_ng)}")
-    return df_all,df_ng
+    return df_go,df_ng
     
 def split_data(df,df_ng):
     # Split data into training and testing sets
-    target = df['target']
-    feats = df.drop(['target'], axis=1)
-    X_train, _, y_train, _ = train_test_split(feats, target, test_size=None, random_state=42)
-    y_test=df_ng['target']
-    X_test=df_ng.drop(['target'], axis=1)
+    df_all=pd.concat([df,df_ng])
+    X = shuffle(df_all)
+
+    # Séparer les données sans NaN (clean) et celles avec NaN
+    X_clean = X.dropna()
+    X_with_nan = X[X.isna().any(axis=1)]
+    Y_clean=X_clean["target"].astype(float).astype(int)
+    # Split uniquement sur les données sans NaN avec stratification
+    X_train_clean, X_test, y_train_clean, y_test = train_test_split(
+        X_clean.drop(["target"],axis=1), Y_clean, test_size=0.1, stratify=Y_clean, random_state=42
+    )
+    # Ajouter les données contenant des NaN uniquement à X_train et y_train
+    X_train = pd.concat([X_train_clean, X_with_nan.drop(["target"],axis=1)])
+    y_train = pd.concat([y_train_clean, X_with_nan["target"]])
+    # Réinitialiser les index pour éviter les conflits
+    X_train.reset_index(drop=True, inplace=True)
+    X_test.reset_index(drop=True, inplace=True)
+    y_train.reset_index(drop=True, inplace=True)
+    y_test.reset_index(drop=True, inplace=True)   
+ 
     return X_train, X_test, y_train, y_test
     
 def create_folder_if_necessary(output_folderpath):

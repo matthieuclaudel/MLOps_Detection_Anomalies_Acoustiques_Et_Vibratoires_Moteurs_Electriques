@@ -1,4 +1,4 @@
-dvc
+dvc==3.56
 matplotlib
 seaborn
 pandas
@@ -7,6 +7,8 @@ seaborn
 matplotlib
 plotly
 umap-learn
-scikit-learn
+scikit-learn==1.5
 dvc[s3]
 fastds
+pickle
+dagshub
