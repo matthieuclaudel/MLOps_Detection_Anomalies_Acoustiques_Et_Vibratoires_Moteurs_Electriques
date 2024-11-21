@@ -103,7 +103,7 @@ def mock_model_class():
 @pytest.fixture
 def mock_import_dataset():
     # Simule la fonction `import_dataset`
-    with patch("models.train_model.import_dataset") as mock:
+    with patch("models.import_dataset") as mock:
         mock.side_effect = [
             [[1, 2], [3, 4]],  # Simule X_train
             [0, 1],  # Simule y_train
@@ -113,8 +113,16 @@ def mock_import_dataset():
 @pytest.fixture
 def mock_normalize_prediction():
     # Simule la fonction `normalize_prediction`
-    with patch("models.train_model.normalize_prediction") as mock:
+    with patch("models.normalize_prediction") as mock:
         mock.return_value = [0, 1]  # Normalisation des prédictions
+        yield mock
+
+
+@pytest.fixture
+def mock_classification_report():
+    # Simule la fonction `classification_report`
+    with patch("models.train_model.classification_report") as mock:
+        mock.return_value = "Fake Classification Report"
         yield mock
 
 
@@ -122,7 +130,7 @@ def test_fit_model_success(
     mock_model_class,
     mock_import_dataset,
     mock_normalize_prediction,
-    # mock_classification_report,
+    mock_classification_report,
 ):
     # Paramètres pour le modèle
     params = {"param1": 10, "param2": 20}
