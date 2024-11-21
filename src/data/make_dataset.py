@@ -84,7 +84,7 @@ def save_dataframes(X_train, X_test, y_train, y_test, output_folderpath) :
         file.to_csv(output_filepath, index=False)
         
 # Fonction principale
-def main(input_filepath='./data/raw', output_filepath='./data/interim') :
+def main(args=None, input_filepath='./data/raw', output_filepath='./data/interim') :
     """
     Point d'entrée principal du programme.
     Runs data processing scripts to turn raw data from (../raw) into
@@ -93,8 +93,10 @@ def main(input_filepath='./data/raw', output_filepath='./data/interim') :
     logger = logging.getLogger(__name__)
     logger.info('making data set from raw data')
     # Récupérer les arguments de la ligne de commande
-    if len(sys.argv) > 1:
-        secret = str(sys.argv[1])  # Convertir le 1er argument
+    if args is None:
+        args = sys.argv
+    if len(args) > 1:
+        secret = str(args[1])  # Convertir le 1er argument
     else:
         logger.info("Veuillez fournir un paramètre str en argument.")
         sys.exit(1)
