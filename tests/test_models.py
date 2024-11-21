@@ -8,10 +8,20 @@ import pandas as pd
 from unittest.mock import patch, MagicMock
 
 from models.train_model import (
-    normalize_prediction, 
-    import_dataset, 
     save_model,
     fit_model
+)
+
+from models.predict_model import (
+    load_model,
+    save_prediction,
+    predict_model,
+    eval_model
+)
+
+from models import (
+    normalize_prediction, 
+    import_dataset, 
 )
 
 def test_normalize_prediction():
@@ -39,10 +49,12 @@ def test_import_dataset_success(mock_csv_file):
     assert list(df.columns) == ["col1", "col2", "col3"]
     assert df.iloc[0]["col1"] == 1
 
+
 def test_import_dataset_file_not_found():
     # Teste si une exception est levée pour un fichier inexistant
     with pytest.raises(FileNotFoundError, match=r".*does not exist !"):
         import_dataset("non_existent_file.csv")
+
 
 def test_import_dataset_with_kwargs(mock_csv_file):
     # Teste si les arguments supplémentaires sont bien passés
@@ -51,16 +63,16 @@ def test_import_dataset_with_kwargs(mock_csv_file):
 
 
 @pytest.fixture
-def mock_model():
+def mock_model_dump():
     # Fixture pour créer un objet modèle fictif
     return {"param1": 1, "param2": 2}
 
-def test_save_model_success(mock_model, tmp_path):
+def test_save_model_success(mock_model_dump, tmp_path):
     # Chemin temporaire pour le fichier du modèle
     model_filename = tmp_path / "test_model.pkl"
     
     # Appeler la fonction pour sauvegarder le modèle
-    save_model(model_filename, mock_model)
+    save_model(model_filename, mock_model_dump)
     
     # Vérifie que le fichier a bien été créé
     assert model_filename.exists()
@@ -68,25 +80,25 @@ def test_save_model_success(mock_model, tmp_path):
     # Vérifie que le contenu du fichier est correct
     with open(model_filename, "rb") as file:
         loaded_model = pickle.load(file)
-        assert loaded_model == mock_model
+        assert loaded_model == mock_model_dump
 
 
-def test_save_model_invalid_path(mock_model):
+def test_save_model_invalid_path(mock_model_dump):
     # Test avec un chemin invalide
     invalid_path = "/invalid_path/test_model.pkl"
     
     # Vérifie qu'une exception est levée
     with pytest.raises(OSError):
-        save_model(invalid_path, mock_model)
+        save_model(invalid_path, mock_model_dump)
 
 
 @pytest.fixture
 def mock_model_class():
     # Crée une classe modèle simulée
-    mock_model = MagicMock()
+    mock_model_ = MagicMock()
     mock_model_instance = MagicMock()
-    mock_model.return_value = mock_model_instance
-    return mock_model
+    mock_model_.return_value = mock_model_instance
+    return mock_model_
 
 @pytest.fixture
 def mock_import_dataset():
@@ -141,3 +153,83 @@ def test_fit_model_import_dataset_error(mock_model_class):
         params = {"param1": 10, "param2": 20}
         with pytest.raises(FileNotFoundError, match="Dataset not found"):
             fit_model(mock_model_class, params)
+
+
+@pytest.fixture
+def mock_model():
+    # Mock d'un modèle avec des méthodes `predict`
+    mock = MagicMock()
+    mock.predict.return_value = np.array([0, 1, 1, 0])
+    return mock
+
+@pytest.fixture
+def mock_import_dataset():
+    # Mock de la fonction `import_dataset`
+    with patch("models.predict_model.import_dataset") as mock:
+        mock.side_effect = [
+            pd.DataFrame([[1, 2], [3, 4]]),  # X_test
+            pd.Series([0, 1]),  # y_test
+        ]
+        yield mock
+
+@pytest.fixture
+def mock_normalize_prediction():
+    # Mock de la fonction `normalize_prediction`
+    with patch("models.predict_model.normalize_prediction") as mock:
+        mock.return_value = np.array([0, 1])
+        yield mock
+
+
+@pytest.fixture
+def mock_load_model(mock_model):
+    # Mock de la fonction `load_model`
+    with patch("models.predict_model.load_model", return_value=mock_model):
+        yield
+
+
+def test_load_model(tmp_path):
+    # Teste la fonction `load_model`
+    model_path = tmp_path / "model.pkl"
+    with open(model_path, "wb") as f:
+        pickle.dump({"param": "value"}, f)
+    model = load_model(model_path)
+    assert model == {"param": "value"}
+
+
+def test_save_prediction(tmp_path):
+    # Teste la fonction `save_prediction`
+    target = np.array([0, 1])
+    prediction = np.array([0, 1])
+    results_path = tmp_path / "predictions.csv"
+    save_prediction(target, prediction, results_path)
+    df = pd.read_csv(results_path)
+    assert list(df.columns) == ["target", "prediction"]
+    assert df["target"].tolist() == [0, 1]
+    assert df["prediction"].tolist() == [0, 1]
+
+
+def test_predict_model_success(
+    mock_load_model,
+    mock_import_dataset,
+    mock_normalize_prediction
+):
+    # Teste la fonction `predict_model`
+    X = pd.DataFrame([[1, 2], [3, 4]])
+    y = pd.Series([0, 1])
+    y_pred = predict_model("dummy_model.pkl", X, y)
+    assert (y_pred == np.array([0, 1])).all()
+
+def test_predict_model_without_y(mock_load_model, mock_normalize_prediction):
+    # Teste `predict_model` sans `y`
+    X = pd.DataFrame([[1, 2], [3, 4]])
+    y_pred = predict_model("dummy_model.pkl", X)
+    assert (y_pred == np.array([0, 1])).all()
+
+def test_eval_model(
+    mock_load_model,
+    mock_import_dataset,
+    mock_normalize_prediction,
+):
+    # Teste la fonction `eval_model`
+    eval_model("dummy_model.pkl")
+    assert mock_import_dataset.call_count == 2

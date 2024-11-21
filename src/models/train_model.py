@@ -13,23 +13,13 @@ import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.metrics import classification_report, confusion_matrix
 
-
-input_filepath = './data/processed'
-fX_train = f"{input_filepath}/X_train_scaled.csv"
-fy_train = f"{input_filepath}/y_train.csv"
-
-
-def normalize_prediction(y: 'numpy.ndarray') -> 'numpy.ndarray':
-    y[y == 1] = 0
-    # y[y == -1] = 1
-    return y
-
-
-def import_dataset(file_path, **kwargs):
-    if os.path.exists(file_path):
-        return pd.read_csv(file_path, **kwargs)
-    else:
-        raise FileNotFoundError(f'{file_path} does not exist !')
+from . import (
+    normalize_prediction,
+    import_dataset,
+    fX_train,
+    fy_train,
+    default_model_filename
+)
 
 
 def save_model(model_filename, model):
@@ -63,7 +53,7 @@ def main(
             "metric": "cosine",
             "n_jobs": -1,
         },
-        model_filename='models/trained_LOF_model.pkl'
+        model_filename=default_model_filename
 ):
     model = fit_model(model_class, params)
     save_model(model_filename, model)

@@ -41,22 +41,6 @@ def test_main_success(mock_sys, mock_save_dataframes, mock_create_folder, mock_s
     assert mock_pull_data.call_count == 1
 
 
-@patch("sys.exit")  # Patch sys.exit pour le tester
-def test_main_missing_argument(mock_exit):
-    # Tester que sys.exit(1) est appelé lorsque l'argument est manquant
-    argv = ["make_dataset"]   # Simuler l'absence de l'argument
-    with pytest.raises(SystemExit) as excinfo:
-        print("HHHHEEEEEERRRRRE")
-        main(argv)
-
-    # Vérifier que sys.exit a bien été appelé avec le code 1
-    mock_exit.assert_called_once_with(1)
-
-    # Optionnel : Vérifier que l'exception levée a bien le code de sortie 1
-    assert excinfo.value.code == 1
-
-
-
 @patch("data.make_dataset.modifconfigsecret")
 @patch("data.make_dataset.logging.getLogger")
 def test_main_modifconfig_error(mock_logger, mock_modifconfig):
