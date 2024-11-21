@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.cluster import DBSCAN
 import json
 import datetime
+from sklearn.externals import joblib
 
 app = FastAPI
 
@@ -20,3 +21,11 @@ async def train(dataset: UploadFile = File(...)):
         f.write(json.dumps(metrics)) 
     with open('test_logs.txt', 'w') as f: 
         f.write(f"{datetime.now()};'Training completed successfully\n'") 
+        #Stockage du modèle dans un fichier
+
+    joblib.dump(model, 'trained_model')
+
+@app.post('/predict')
+async def predict():
+    mp = joblib.load('trained_model')
+    mp.predict()
