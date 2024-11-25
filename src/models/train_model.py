@@ -40,6 +40,6 @@ print("Rapport de classification : \n", classification_report(y_train, y_pred), 
 print(confusion_matrix(y_train.values, y_pred=y_pred))
 # Sauvegarder le modèle entraîné dans un fichier .pkl
 model_filename = 'models/trained_LOF_model.pkl'
-with open(model_filename, 'wb') as file:
+with open(model_filename, 'wb') as file: 
     pickle.dump(model, file)
 print(f"Modèle entraîné sauvegardé sous {model_filename}")
