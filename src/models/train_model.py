@@ -20,21 +20,21 @@ f_ytrain = f"{input_filepath}/y_train.csv"
 fX_test = f"{input_filepath}/X_test_scaled.csv"
 f_ytest = f"{input_filepath}/y_test.csv"
     # Import datasets
-X_train = import_dataset(fX_train, header=None)
-y_train = import_dataset(f_ytrain)
+X_train = import_dataset(fX_train,index_col="index")
+y_train = import_dataset(f_ytrain,index_col="index")
 
 # Instanciation de l'algo LOF de base
 params = {
     "novelty": True,
-    "n_neighbors": 2,
-    "contamination": 0.25,
-    "metric": "cosine",
+    "n_neighbors": 5,
+    "contamination": 0.28,
+    "metric": "minkowski",
     "n_jobs": -1,
 }
 model = LocalOutlierFactor(**params)
     # Training sans réduction de dimension
-y_pred = model.fit(X_train)
-y_pred = model.predict(X_train)
+model.fit(X_train.values)
+y_pred = model.predict(X_train.values)
 y_pred[y_pred == 1] = 0
 print("Rapport de classification : \n", classification_report(y_train, y_pred), "\n")
 print(confusion_matrix(y_train.values, y_pred=y_pred))
