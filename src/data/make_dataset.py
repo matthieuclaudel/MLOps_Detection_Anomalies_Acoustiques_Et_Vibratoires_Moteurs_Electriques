@@ -7,12 +7,16 @@ Description : Ce script crée le fichier Config . local à partir du secret incl
 Auteur : Pinel.A
 Date : 2024-11-04
 """
-import sys, subprocess, os, logging, inspect
+import sys
+import subprocess
+import os
+import logging
+import inspect
 import pandas as pd
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 # Fonctions
-def pull_data_with_dvc(logger):
+def pull_data_with_dvc(logger): 
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     cmd = [sys.executable, "-m", "dvc", "pull"]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -24,7 +28,7 @@ def pull_data_with_dvc(logger):
         logger.info(result.stderr)
     return result.returncode
 
-def modifconfigsecret(file_path, secret, logger):
+def modifconfigsecret(file_path, secret, logger): 
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     chemin_fichier = file_path+"config.local"
 
@@ -40,15 +44,15 @@ def modifconfigsecret(file_path, secret, logger):
             logger.info("credentials pass")
         return result
 
-def import_dataset(logger, file_path, **kwargs):
+def import_dataset(logger, file_path, **kwargs): 
     logger = logging.getLogger(inspect.currentframe().f_code.co_name)
     df_go = pd.read_csv(file_path+'/DATASET_GO_NG.csv', **kwargs)
     logger.info(f"df all nbre de lignes :{len(df_go)}")
     df_ng = pd.read_csv(file_path+'/DATASET_NG.csv', **kwargs)
     logger.info(f"df test nbre de lignes :{len(df_ng)}")
     return df_go, df_ng
-    
-def split_data(df, df_ng):
+
+def split_data(df, df_ng): 
     # Split data into training and testing sets
     df_all = pd.concat([df, df_ng])
     X = shuffle(df_all)
@@ -62,29 +66,24 @@ def split_data(df, df_ng):
         X_clean.drop(["target"], axis=1), Y_clean, test_size=0.1, stratify=Y_clean, random_state=42
     )
     # Ajouter les données contenant des NaN uniquement à X_train et y_train
-    X_train = pd.concat([X_train_clean, X_with_nan.drop(["target"],axis=1)])
+    X_train = pd.concat([X_train_clean, X_with_nan.drop(["target"], axis=1)])
     y_train = pd.concat([y_train_clean, X_with_nan["target"]])
-    # Réinitialiser les index pour éviter les conflits
-    X_train.reset_index(drop=True, inplace=True)
-    X_test.reset_index(drop=True, inplace=True)
-    y_train.reset_index(drop=True, inplace=True)
-    y_test.reset_index(drop=True, inplace=True)   
- 
     return X_train, X_test, y_train, y_test
     
-def create_folder_if_necessary(output_folderpath):
+def create_folder_if_necessary(output_folderpath): 
     # Create folder if necessary
     if os.path.exists(output_folderpath) == False:
         os.makedirs(output_folderpath)
 
-def save_dataframes(X_train, X_test, y_train, y_test, output_folderpath) :
+def save_dataframes(X_train, X_test, y_train, y_test, output_folderpath): 
     # Save dataframes to their respective output file paths
     for file, filename in zip([X_train, X_test, y_train, y_test], ['X_train', 'X_test', 'y_train', 'y_test']):
         output_filepath = os.path.join(output_folderpath, f'{filename}.csv')
-        file.to_csv(output_filepath, index=False)
-        
+        file.to_csv(output_filepath, index=True)
+
 # Fonction principale
 def main(args=None, input_filepath='./data/raw', output_filepath='./data/interim') :
+
     """
     Point d'entrée principal du programme.
     Runs data processing scripts to turn raw data from (../raw) into
@@ -122,7 +121,7 @@ def main(args=None, input_filepath='./data/raw', output_filepath='./data/interim
     logger.info('make interim data set')
 
 # Bloc pour lancer le script en tant que programme principal
-if __name__ == "__main__" :
+if __name__ == "__main__": 
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
     main()

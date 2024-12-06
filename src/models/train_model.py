@@ -21,31 +21,27 @@ from . import (
     default_model_filename
 )
 
-
 def save_model(model_filename, model):
     with open(model_filename, 'wb') as file:
         pickle.dump(model, file)
         print(f"Modèle entraîné sauvegardé sous {model_filename}")
 
-
 def fit_model(model_class, params):
     model = model_class(**params)
-
-    X_train = import_dataset(fX_train, header=None)
+    X_train = import_dataset(fX_train)
     y_train = import_dataset(fy_train)
 
-    model.fit(X_train, y_train)
+    model.fit(X_train.values)
 
-    y_pred = model.predict(X_train)
+    y_pred = model.predict(X_train.values)
     y_pred = normalize_prediction(y_pred)
 
     print("Rapport de classification sur le jeu d'entrainement : \n", classification_report(y_train, y_pred), "\n")
-
+    print(confusion_matrix(y_train.values, y_pred=y_pred))
     return model
 
-
 def main(
-        model_class=LocalOutlierFactor,
+        model_class=LocalOutlierFactor
         params={
             "novelty": True,
             "n_neighbors": 2,

@@ -21,12 +21,10 @@ from . import (
     default_model_filename
 )
 
-
 def load_model(model_filename):
     with open(model_filename, 'rb') as file:
         loaded_model = pickle.load(file)
     return loaded_model
-
 
 def save_prediction(target, prediction, results_filename):
 
@@ -38,7 +36,6 @@ def save_prediction(target, prediction, results_filename):
     df.to_csv(results_filename, index=False)
     print(f"Prédictions sauvegardées dans {results_filename}")
 
-
 def predict_model(model_filename, X, y=None):
     model = load_model(model_filename)
     y_pred = model.predict(X)
@@ -49,15 +46,12 @@ def predict_model(model_filename, X, y=None):
     
     return y_pred
 
-
 def eval_model(model_filename):
-    X_test = import_dataset(fX_test, header=None)
+    X_test = import_dataset(fX_test)
     y_test = import_dataset(fy_test)
 
-    y_pred = predict_model(model_filename, X_test, y_test)
+    y_pred = predict_model(model_filename, X_test.values, y_test)
     print("Rapport de classification : \n", classification_report(y_test, y_pred), "\n")
-
-
 
 def main(model_filename=default_model_filename):
     eval_model(model_filename)

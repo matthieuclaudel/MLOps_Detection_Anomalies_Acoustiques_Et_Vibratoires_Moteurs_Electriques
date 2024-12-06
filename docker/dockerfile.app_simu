@@ -1,0 +1,19 @@
+# Utiliser une image Python
+FROM python:3.12-slim
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de l'application
+COPY ../src/apps/app_simulation.py /app
+COPY ../data/raw/DATASIMU750.csv ./data/raw/DATASIMU750.csv
+# Définir des variables d'environnement
+ENV API_URL = http://localhost:8000
+ENV API_USER = XXX
+ENV API_PWD = XXX
+# Installer les packages Python nécessaires
+RUN pip install --no-cache-dir pandas requests python-dotenv
+
+
+# Commande par défaut
+CMD ["python3", "app_simulation.py"]

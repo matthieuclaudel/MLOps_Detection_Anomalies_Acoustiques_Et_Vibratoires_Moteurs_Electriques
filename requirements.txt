@@ -7,7 +7,7 @@ seaborn
 matplotlib
 plotly
 umap-learn
-scikit-learn==1.5
+scikit-learn==1.5.2
 dvc[s3]
 fastds
 dagshub
