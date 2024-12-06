@@ -19,7 +19,6 @@ fX_test = join(f"{input_filepath}", "X_test_scaled.csv")
 fy_test = join(f"{input_filepath}", "y_test.csv")
 default_model_filename = join(models_directory_path, 'trained_LOF_model.pkl')
 
-
 def normalize_prediction(y: 'np.ndarray') -> 'np.ndarray':
     y[y == 1] = 0
     # y[y == -1] = 1

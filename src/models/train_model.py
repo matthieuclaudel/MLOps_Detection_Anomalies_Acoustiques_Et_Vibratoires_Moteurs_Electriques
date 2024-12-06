@@ -8,13 +8,9 @@ Auteur : Pinel.A
 Date : 2024-11-04
 """
 import pickle
-import os
-import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
-from sklearn.metrics import classification_report
 
-from utils import (
-    normalize_prediction,
+from src.models.utils import (
     import_dataset,
     fX_train,
     fy_train,

@@ -1,14 +1,14 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
-from data.make_dataset import main
+from src.data.make_dataset import main
 
-@patch("data.make_dataset.pull_data_with_dvc")
-@patch("data.make_dataset.import_dataset")
-@patch("data.make_dataset.split_data")
-@patch("data.make_dataset.create_folder_if_necessary")
-@patch("data.make_dataset.save_dataframes")
-@patch("data.make_dataset.sys")
+@patch("src.data.make_dataset.pull_data_with_dvc")
+@patch("src.data.make_dataset.import_dataset")
+@patch("src.data.make_dataset.split_data")
+@patch("src.data.make_dataset.create_folder_if_necessary")
+@patch("src.data.make_dataset.save_dataframes")
+@patch("src.data.make_dataset.sys")
 def test_main_success(mock_sys, mock_save_dataframes, mock_create_folder, mock_split_data, 
                       mock_import_dataset, mock_pull_data):
     # Configurer les mocks
@@ -40,17 +40,18 @@ def test_main_success(mock_sys, mock_save_dataframes, mock_create_folder, mock_s
     # Vérifier les retours et le comportement général
     assert mock_pull_data.call_count == 1
 
-
-@patch("data.make_dataset.modifconfigsecret")
-@patch("data.make_dataset.logging.getLogger")
-def test_main_modifconfig_error(mock_logger, mock_modifconfig):
+@patch("src.data.make_dataset.logging.getLogger")  # Ce patch est appliqué EN DERNIER, donc injecté en PREMIER
+@patch("src.data.make_dataset.modifconfigsecret")
+def test_main_argument_missing_sys_exit(mock_modifconfig, mock_get_logger):
     # Configurer les mocks
     mock_modifconfig.side_effect = Exception("Erreur dans modifconfigsecret")
-    mock_logger.return_value = MagicMock()
+    mock_logger_instance = MagicMock()
+    mock_get_logger.return_value = mock_logger_instance
 
-    # Appeler la fonction et vérifier qu'elle gère l'erreur
-    with pytest.raises(Exception, match="Erreur dans modifconfigsecret"):
-        main()
+    # Vérifier que sys.exit est levé lorsqu'il manque un argument
+    with pytest.raises(SystemExit) as exc_info:
+        main(args=[])
+    assert exc_info.value.code == 1  # Vérifier que le code de sortie est 1
 
-    # Vérifier que l'erreur est loguée
-    mock_logger.return_value.info.assert_any_call("making data set from raw data")
+    # Vérifier que le logger a logué le message attendu
+    mock_logger_instance.info.assert_any_call("Veuillez fournir un paramètre str en argument.")

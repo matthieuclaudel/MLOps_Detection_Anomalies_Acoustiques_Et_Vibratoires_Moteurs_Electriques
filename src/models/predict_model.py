@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
 
-from utils import (
+from src.models.utils import (
     import_dataset,
     normalize_prediction,
     fX_test,
