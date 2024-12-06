@@ -8,10 +8,9 @@ WORKDIR /app
 COPY ../src/apps/app_simulation.py /app
 COPY ../data/raw/DATASIMU750.csv ./data/raw/DATASIMU750.csv
 # Définir des variables d'environnement
-ENV API_URL="https://www.google.fr/"
-ENV API_USER="user"
-ENV API_PWD="pwd"
-
+ENV API_URL = http://localhost:8000
+ENV API_USER = XXX
+ENV API_PWD = XXX
 # Installer les packages Python nécessaires
 RUN pip install --no-cache-dir pandas requests python-dotenv
 

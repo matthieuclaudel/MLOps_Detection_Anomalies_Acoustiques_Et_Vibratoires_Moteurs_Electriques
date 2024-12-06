@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from hashlib import sha256
-from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 import json
 import os
@@ -10,7 +9,6 @@ from datetime import datetime, timedelta
 import jwt
 from cryptography.fernet import Fernet
 from fastapi.responses import HTMLResponse
-import logging
 import dagshub
 import mlflow
 import pickle
@@ -21,11 +19,11 @@ load_dotenv()
 app = FastAPI()
 
 # Constants
-JSON_FILE_PATH = os.path.expanduser("./src/apps/users.json")
+JSON_FILE_PATH = os.path.expanduser("./data/users.json")
 SECRET_KEY = Fernet.generate_key()
 ALGORITHM = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
-
+DAGSHUB_USER_TOKEN = os.getenv('DAGSHUB_USER_TOKEN', 'Token par défaut') 
 # User Models
 class User(BaseModel):
     username: str
@@ -485,17 +483,15 @@ class Mesure(BaseModel):
 
 
 # Functions for initialization and configuration
-def load_models():
+def load_models(name = 'model_docker'):
     # Connexion au dépôt DagsHub et récupération du modèle
+    dagshub.auth.add_app_token(token=DAGSHUB_USER_TOKEN )
     dagshub.init(repo_owner='crotelius77', repo_name='MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques', mlflow=True)
     # create a client to access the MLflow tracking server
     client = mlflow.MlflowClient()
     for model in client.search_registered_models(filter_string="name LIKE '%'"):
         for model_version in model.latest_versions:
-            print(f"name={model_version.name}; run_id={model_version.run_id}; version={model_version.version}, stage={model_version.current_stage}")
-    # Model name
-    name = 'model_docker'
-
+            print(f"name={model_version.name}; run_id={model_version.run_id}; version={model_version.version}, stage={model_version.current_stage}")   
     # Get the latest version for the model
     version = client.get_latest_versions(name=name)[0].version
 
@@ -517,9 +513,8 @@ def load_models():
     return model
 
 # Initialization   
-logging.basicConfig(level=logging.DEBUG)
-model = load_models()
-
+model = load_models(name = 'model_docker')
+sc = load_models(name = 'StandardScaler')
 # Helper Functions
 def verify_password(plain_password, hashed_password):
     return sha256(plain_password.encode()).hexdigest() == hashed_password
@@ -579,12 +574,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 async def predict_sign(Mesures_CNI: Mesure):#, current_user: UserOut = Depends(get_current_user)):
     # Conversion en tableau numpy et reshape pour le modèle
     features_array=[]
-    logging.debug(f"Type de l'entrée : {type(Mesures_CNI)}")
     features_array=list(Mesures_CNI.dict().values())
     array_float = np.array(features_array)
     reshaped_values = array_float.reshape(1, -1)
-    prediction = model.predict(reshaped_values)
-    print(prediction[0])
+    X_test=sc.transform(reshaped_values)
+    prediction = model.predict(X_test)
+    print(f"longeur X_test = {len(X_test[0])},prediction = {prediction[0]}")
     return {"Prediction":int(prediction)}
 
 @app.get("/", response_class=HTMLResponse)
