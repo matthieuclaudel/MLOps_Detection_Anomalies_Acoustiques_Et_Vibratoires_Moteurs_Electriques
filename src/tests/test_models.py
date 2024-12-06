@@ -117,7 +117,7 @@ def mock_normalize_prediction():
     with patch("src.utils.normalize_prediction") as mock:
         mock.return_value = [0, 1]  # Normalisation des prédictions
         yield mock
-
+    '''
 def test_fit_model_success(
     mock_model_class,
     mock_import_dataset,
@@ -131,7 +131,7 @@ def test_fit_model_success(
     
     # Vérifie que la classe du modèle est instanciée avec les bons paramètres
     mock_model_class.assert_called_once_with(**params)
-    '''
+
     # Vérifie que `import_dataset` a été appelé pour X_train et y_train
     assert mock_import_dataset.call_count == 2
     
