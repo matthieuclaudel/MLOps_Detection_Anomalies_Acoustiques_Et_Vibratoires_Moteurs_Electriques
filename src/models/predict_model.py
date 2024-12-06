@@ -13,35 +13,48 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import classification_report
 
-def import_dataset(file_path, **kwargs): 
-    return pd.read_csv(file_path, **kwargs)
+from . import (
+    import_dataset,
+    normalize_prediction,
+    fX_test,
+    fy_test,
+    default_model_filename
+)
 
-# Chargement des données pour évaluation (Remplacer par votre méthode de chargement)
-input_filepath = './data/processed'
-fX_test = f"{input_filepath}/X_test_scaled.csv"
-f_ytest = f"{input_filepath}/y_test.csv"
-fX_train = f"{input_filepath}/X_train_scaled.csv"
-# Import datasets
-X_test = import_dataset(fX_test,index_col="index")
-y_test = import_dataset(f_ytest,index_col="index")
-X_train = import_dataset(fX_train,index_col="index")
-# Chemin vers le modèle sauvegardé
-model_filename = 'models/trained_LOF_model.pkl'
+def load_model(model_filename):
+    with open(model_filename, 'rb') as file:
+        loaded_model = pickle.load(file)
+    return loaded_model
 
-# Charger les modèles entraînés
-with open(model_filename, 'rb') as file: 
-    loaded_model = pickle.load(file)
+def save_prediction(target, prediction, results_filename):
 
-print("Modèle chargé avec succès !")
-# Faire des prédictions avec le modèle chargé
-y_pred = loaded_model.predict(X_test.values)
-y_pred[y_pred == 1] = 0
+    df = pd.DataFrame(
+        data=np.c_[target, prediction],
+        columns=['target', 'prediction']
+    )
+    
+    df.to_csv(results_filename, index=False)
+    print(f"Prédictions sauvegardées dans {results_filename}")
 
-print("Rapport de classification : \n", classification_report(y_test, y_pred), "\n")
-# Sauvegarder les prédictions et les vraies valeurs dans un nouveau fichier CSV
-predictions_df = y_test
-predictions_df["y_pred"] = y_pred
-data_filename = 'data/predictions.csv'
-predictions_df.to_csv(data_filename, index=False)
+def predict_model(model_filename, X, y=None):
+    model = load_model(model_filename)
+    y_pred = model.predict(X)
+    y_pred = normalize_prediction(y_pred)
+    if y is not None:
+        print("Rapport de classification sur le jeu données : \n", classification_report(y, y_pred), "\n")
+        save_prediction(y.values.squeeze(), y_pred.squeeze(), 'data/predictions.csv')
+    
+    return y_pred
 
-print(f"Prédictions sauvegardées dans {data_filename}")
+def eval_model(model_filename):
+    X_test = import_dataset(fX_test)
+    y_test = import_dataset(fy_test)
+
+    y_pred = predict_model(model_filename, X_test.values, y_test)
+    print("Rapport de classification : \n", classification_report(y_test, y_pred), "\n")
+
+def main(model_filename=default_model_filename):
+    eval_model(model_filename)
+
+if __name__ == "__main__":
+    main()

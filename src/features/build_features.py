@@ -50,7 +50,7 @@ def process_data(fX_test, fX_train, output_filepath, f_ytrain,f_ytest):
     model_filename = 'models/trained_SC_model.pkl'
     with open(model_filename, 'wb') as file:
        pickle.dump(scaler, file)
-    logger.info(f"Modèle entraîné sauvegardé sous {model_filename}")
+    logger.info(f'Modèle entraîné sauvegardé sous {model_filename}')
     create_folder_if_necessary(output_filepath)
 
     # Save dataframes to their respective output file paths
