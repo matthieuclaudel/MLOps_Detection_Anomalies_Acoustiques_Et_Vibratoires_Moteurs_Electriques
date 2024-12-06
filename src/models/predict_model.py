@@ -11,9 +11,9 @@ Date : 2024-11-18
 import pickle
 import pandas as pd
 import numpy as np
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
 
-from . import (
+from utils import (
     import_dataset,
     normalize_prediction,
     fX_test,
@@ -43,15 +43,16 @@ def predict_model(model_filename, X, y=None):
     if y is not None:
         print("Rapport de classification sur le jeu données : \n", classification_report(y, y_pred), "\n")
         save_prediction(y.values.squeeze(), y_pred.squeeze(), 'data/predictions.csv')
+        print(confusion_matrix(y, y_pred=y_pred))
     
-    return y_pred
+    return
 
 def eval_model(model_filename):
     X_test = import_dataset(fX_test)
     y_test = import_dataset(fy_test)
+    
+    predict_model(model_filename, X_test.values, y_test)
 
-    y_pred = predict_model(model_filename, X_test.values, y_test)
-    print("Rapport de classification : \n", classification_report(y_test, y_pred), "\n")
 
 def main(model_filename=default_model_filename):
     eval_model(model_filename)

@@ -12,18 +12,20 @@ from fastapi.responses import HTMLResponse
 import dagshub
 import mlflow
 import pickle
+from prometheus_fastapi_instrumentator import Instrumentator
 # Variable d'env
 from dotenv import load_dotenv
 load_dotenv()
-
 app = FastAPI()
-
+instrumentator = Instrumentator().instrument(app).expose(app)
 # Constants
 JSON_FILE_PATH = os.path.expanduser("./data/users.json")
 SECRET_KEY = Fernet.generate_key()
 ALGORITHM = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
-DAGSHUB_USER_TOKEN = os.getenv('DAGSHUB_USER_TOKEN', 'Token par défaut') 
+DAGSHUB_USER_TOKEN = os.getenv('DAGSHUB_USER_TOKEN', 'Token par défaut')
+version_sc = 0
+version_model = 0
 # User Models
 class User(BaseModel):
     username: str
@@ -510,11 +512,11 @@ def load_models(name = 'model_docker'):
         print(f"Chargement du modèle depuis {model_uri}...")
         with open(f"models/{name}/{version}.pkl", "rb") as f:
             model = pickle.load(f)
-    return model
+    return model,version
 
 # Initialization   
-model = load_models(name = 'model_docker')
-sc = load_models(name = 'StandardScaler')
+model,version_model = load_models(name = 'model_docker')
+sc,version_sc = load_models(name = 'StandardScaler')
 # Helper Functions
 def verify_password(plain_password, hashed_password):
     return sha256(plain_password.encode()).hexdigest() == hashed_password
@@ -592,6 +594,19 @@ async def root():
     </html>
     """
     return html_content
+
+# Endpoint pour vérifier la version
+@app.get("/version")
+async def get_version():
+    return {"version standard scaler" : version_sc , "version model" : version_model }
+
+# Endpoint pour Mettre à jour les versions du modèle à partir dagshub.
+@app.put("/relaod")
+async def put_relaod():
+    global model,version_model,sc,version_sc
+    model,version_model = load_models(name = 'model_docker')
+    sc,version_sc = load_models(name = 'StandardScaler')
+    return {"version standard scaler" : version_sc , "version model" : version_model }
 
 if __name__ == "__main__":
     import uvicorn

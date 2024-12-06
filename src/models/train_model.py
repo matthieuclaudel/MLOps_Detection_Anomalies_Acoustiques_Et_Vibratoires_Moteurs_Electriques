@@ -11,9 +11,9 @@ import pickle
 import os
 import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report
 
-from . import (
+from utils import (
     normalize_prediction,
     import_dataset,
     fX_train,
@@ -28,24 +28,19 @@ def save_model(model_filename, model):
 
 def fit_model(model_class, params):
     model = model_class(**params)
+    print(f"import data encours ...")
     X_train = import_dataset(fX_train)
     y_train = import_dataset(fy_train)
-
+    print(f"Modèle entraînement encours ...")
     model.fit(X_train.values)
 
-    y_pred = model.predict(X_train.values)
-    y_pred = normalize_prediction(y_pred)
-
-    print("Rapport de classification sur le jeu d'entrainement : \n", classification_report(y_train, y_pred), "\n")
-    print(confusion_matrix(y_train.values, y_pred=y_pred))
     return model
 
-def main(
-        model_class=LocalOutlierFactor
+def main(model_class=LocalOutlierFactor,
         params={
             "novelty": True,
-            "n_neighbors": 2,
-            "contamination": 0.25,
+            "n_neighbors": 240,
+            "contamination": 0.06,
             "metric": "cosine",
             "n_jobs": -1,
         },
