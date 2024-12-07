@@ -10,7 +10,7 @@ Date : 2024-11-04
 import pickle
 from sklearn.neighbors import LocalOutlierFactor
 
-from src.models.utils import (
+from utils import (
     import_dataset,
     fX_train,
     fy_train,

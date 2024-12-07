@@ -24,7 +24,6 @@ def normalize_prediction(y: 'np.ndarray') -> 'np.ndarray':
     # y[y == -1] = 1
     return y
 
-
 def import_dataset(file_path,**kwargs):
     if os.path.exists(file_path):
         return pd.read_csv(file_path, index_col="index", **kwargs)

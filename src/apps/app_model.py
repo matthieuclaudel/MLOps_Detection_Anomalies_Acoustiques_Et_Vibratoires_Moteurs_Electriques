@@ -27,18 +27,18 @@ DAGSHUB_USER_TOKEN = os.getenv('DAGSHUB_USER_TOKEN', 'Token par défaut')
 version_sc = 0
 version_model = 0
 # User Models
-class User(BaseModel):
+class User(BaseModel): 
     username: str
     first_name: str
     last_name: str
     password: str
 
-class UserOut(BaseModel):
+class UserOut(BaseModel): 
     username: str
     first_name: str
     last_name: str
 
-class UserInDB(User):
+class UserInDB(User): 
     password: str
 
     class Config:
@@ -485,7 +485,7 @@ class Mesure(BaseModel):
 
 
 # Functions for initialization and configuration
-def load_models(name = 'model_docker'):
+def load_models(name = 'model_docker'): 
     # Connexion au dépôt DagsHub et récupération du modèle
     dagshub.auth.add_app_token(token=DAGSHUB_USER_TOKEN )
     dagshub.init(repo_owner='crotelius77', repo_name='MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques', mlflow=True)
