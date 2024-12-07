@@ -6,12 +6,14 @@ import sys
 import os
 from unittest.mock import patch, MagicMock
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "....")))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "......")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src/models")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 from src.models.utils import (
     normalize_prediction,
     import_dataset
 )
+
+
 from src.models.train_model import (
     save_model,
     fit_model

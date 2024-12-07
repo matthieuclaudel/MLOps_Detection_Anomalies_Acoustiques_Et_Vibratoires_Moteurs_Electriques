@@ -60,8 +60,10 @@ jobs:
     
     # Étape 4: Exécuter les tests avec pytest
     - name: Run tests with pytest
+      env:
+        PYTHONPATH: ${{ github.workspace }}/src  # Ajouter src/ au chemin Python
       run: |
-        pytest    
+        pytest tests/
 
   run-shell-command:
     runs-on: ubuntu-latest
