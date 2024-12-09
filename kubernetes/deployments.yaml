@@ -1,0 +1,106 @@
+# Premier Deployment model
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-deployment
+spec:
+  selector:
+    matchLabels:
+      app: app-model
+  template:
+    metadata:
+      labels:
+        app: app-model
+        role: app-public
+    spec:
+      containers:
+      - name: model
+        image: adrien157/model:latest
+        env:
+          - name: DAGSHUB_USER_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: my-token-secret
+                key: token
+        resources:
+          requests:
+            cpu: "60m"  # Demande de CPU pour le pod
+            memory: "800Mi"
+          limits:
+            memory: "999Mi"
+            cpu: "100m"  # Limite de CPU pour le pod
+        ports:
+        - containerPort: 8000
+---
+# Deuxième Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-simu-deployment
+spec:
+  selector:
+    matchLabels:
+      app: app_simu
+  template:
+    metadata:
+      labels:
+        app: app_simu
+        role: app-privee
+    spec:
+      containers:
+      - name: app-simu
+        image: adrien157/simulation_request_model:latest
+        env:
+          - name: API_URL
+            value: http://service-inter-simu:8001
+          - name: API_USER
+            valueFrom:
+              secretKeyRef:
+                name: basic-auth-secret
+                key: username
+          - name: API_PWD
+            valueFrom:
+              secretKeyRef:
+                name: basic-auth-secret
+                key: password
+          - name: DAGSHUB_USER_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: my-token-secret
+                key: token
+        resources:
+          requests:
+            cpu: "20m"  # Demande de CPU pour le pod
+            memory: "120Mi"
+          limits:
+            memory: "200Mi"
+            cpu: "40m"  # Limite de CPU pour le pod
+---
+# Troisieme Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-streamlit-deployment
+spec:
+  selector:
+    matchLabels:
+      app: app_streamlit
+  template:
+    metadata:
+      labels:
+        app: app_streamlit
+        role: app-public
+    spec:
+      containers:
+      - name: app-streamlit
+        image: adrien157/app_streamlit:latest
+        resources:
+          requests:
+            cpu: "50m"  # Demande de CPU pour le pod
+            memory: "460Mi"
+          limits:
+            memory: "800Mi"
+            cpu: "500m"  # Limite de CPU pour le pod
+        ports:
+        - containerPort: 8501
+---

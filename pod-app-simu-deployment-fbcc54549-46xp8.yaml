@@ -1,0 +1,149 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2024-12-09T16:22:48Z"
+  generateName: app-simu-deployment-fbcc54549-
+  labels:
+    app: app_simu
+    pod-template-hash: fbcc54549
+    role: app-privee
+  name: app-simu-deployment-fbcc54549-46xp8
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: app-simu-deployment-fbcc54549
+    uid: c75b35c2-fd8b-4018-80bd-3b9ec564c39d
+  resourceVersion: "6951"
+  uid: 96cad4c4-ca83-434e-907a-7eb8d23f75ee
+spec:
+  containers:
+  - env:
+    - name: API_URL
+      value: http://service-inter-simu:8001
+    - name: API_USER
+      valueFrom:
+        secretKeyRef:
+          key: username
+          name: basic-auth-secret
+    - name: API_PWD
+      valueFrom:
+        secretKeyRef:
+          key: password
+          name: basic-auth-secret
+    - name: DAGSHUB_USER_TOKEN
+      valueFrom:
+        secretKeyRef:
+          key: token
+          name: my-token-secret
+    image: adrien157/simulation_request_model:latest
+    imagePullPolicy: Always
+    name: app-simu
+    resources:
+      limits:
+        cpu: 40m
+        memory: 200Mi
+      requests:
+        cpu: 20m
+        memory: 120Mi
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-2k4p7
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: minikube
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-2k4p7
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2024-12-09T16:22:51Z"
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2024-12-09T16:22:48Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2024-12-09T16:23:38Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2024-12-09T16:23:38Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2024-12-09T16:22:48Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://8125789e4d724f7edba5d9facee43678e1db7911d839795a9076f27d0220f381
+    image: adrien157/simulation_request_model:latest
+    imageID: docker-pullable://adrien157/simulation_request_model@sha256:e3ec2a49d9d5ae75227a57175db5e64abe21cf0d674f47e9b440775d5c35580b
+    lastState:
+      terminated:
+        containerID: docker://e47eb39aaee8a3da21b9b1910440e125f908b9d712d7182bad7cb868e04d5a8e
+        exitCode: 1
+        finishedAt: "2024-12-09T16:23:35Z"
+        reason: Error
+        startedAt: "2024-12-09T16:22:51Z"
+    name: app-simu
+    ready: true
+    restartCount: 1
+    started: true
+    state:
+      running:
+        startedAt: "2024-12-09T16:23:37Z"
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-2k4p7
+      readOnly: true
+      recursiveReadOnly: Disabled
+  hostIP: 192.168.49.2
+  hostIPs:
+  - ip: 192.168.49.2
+  phase: Running
+  podIP: 10.244.0.19
+  podIPs:
+  - ip: 10.244.0.19
+  qosClass: Burstable
+  startTime: "2024-12-09T16:22:48Z"

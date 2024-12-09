@@ -1,7 +1,19 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mypvc
+  name: pvc-mongoDB
+spec:
+  resources:
+    requests:
+      storage: <Size>
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-influxDB
 spec:
   resources:
     requests:

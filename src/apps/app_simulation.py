@@ -23,7 +23,7 @@ def import_dataset(file_path, **kwargs):
     logger.info(f"df nbre de lignes :{len(df)}")
     return df
    
-# Function to get data from Adzuna API at a specific page
+# Function to get data API at a specific page
 def fetch_job(API_URL, datas,headers): 
     val=datas.get("G14_vib_up")
     logger.info(f"URL d'appel = {API_URL}/ data G14_vib_up = {val}")

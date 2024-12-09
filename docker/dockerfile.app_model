@@ -9,7 +9,7 @@ COPY ../src/apps/app_model.py /app
 COPY ../data/users.json ./data/users.json
 RUN mkdir /models
 # Définir des variables d'environnement
-ENV TOKEN = XXX
+ENV DAGSHUB_USER_TOKEN = XXX
 # Installer les packages Python nécessaires
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir python-dotenv fastapi dagshub mlflow==2.17.1 pyjwt cryptography python-multipart uvicorn prometheus-fastapi-instrumentator

@@ -1,0 +1,18 @@
+# Utiliser une image Python
+FROM python:3.12-slim
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de l'application
+COPY ../src/apps/streamlit/ /app/
+# Définir des variables d'environnement
+
+# Installer les packages Python nécessaires
+RUN pip install --no-cache-dir streamlit numpy pandas matplotlib seaborn plotly scikit-learn umap-learn requests
+
+# Expose le port utilisé par l'application
+EXPOSE 8501
+
+# Commande pour lancer l'application
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]

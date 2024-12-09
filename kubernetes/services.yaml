@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-port-service-public
+spec:
+  type: NodePort
+  selector:
+    role: app-public
+  ports:
+  - name: port-fastapi
+    protocol: TCP
+    port: 8000        # Port exposé par le service
+    targetPort: 8000  # Port sur lequel le conteneur écoute
+    nodePort: 30001
+  - name: port-streamlit
+    protocol: TCP
+    port: 8501        # Port exposé par le service
+    targetPort: 8501  # Port sur lequel le conteneur écoute
+    nodePort: 30002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-inter-simu
+spec:
+  selector:
+    app: app-model  # Ce label doit correspondre au label du déploiement model
+  ports:
+    - protocol: TCP
+      port: 8001        # Port exposé par le service
+      targetPort: 8000  # Port sur lequel le conteneur écoute
+  type: ClusterIP       # Service accessible uniquement dans le cluster
