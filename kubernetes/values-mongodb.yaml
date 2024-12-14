@@ -72,9 +72,9 @@ auth:
   ## @param auth.passwords List of passwords for the custom users set at `auth.usernames`
   ## @param auth.databases List of custom databases to be created during the initialization
   ##
-  usernames: ["adrien","matthieu","api",api_ui]
-  passwords: ["adrien","matthieu","api",api_ui]
-  databases: ["production","developement","logs","metrics"]
+  usernames: ["adrien","matthieu","Ludovic","api"]
+  passwords: ["adrien","matthieu","Ludovic","api"]
+  databases: ["production","production","production"]
   ## @param auth.replicaSetKey Key used for authentication in the replicaset (only when `architecture=replicaset`)
   ##
   replicaSetKey: ""
@@ -206,7 +206,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for MongoDB(&reg;) data volume
   ##
-  size: 8Gi
+  size: 10Gi
   ## @param persistence.annotations PVC annotations
   ##
   annotations: {}

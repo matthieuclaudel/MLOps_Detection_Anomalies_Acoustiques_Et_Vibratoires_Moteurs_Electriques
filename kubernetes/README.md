@@ -112,3 +112,5 @@ WARNING: There are "resources" sections in the chart not set. Using "resourcesPr
   - resources
 +info https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
+6. http://inteva.hopto.org:30001/docs               model fastapi
+7. http://inteva.hopto.org:30002/Test_prediction    streamlit
