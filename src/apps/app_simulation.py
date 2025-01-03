@@ -25,7 +25,7 @@ def import_dataset(file_path, **kwargs):
    
 # Function to get data API at a specific page
 def fetch_job(API_URL, datas,headers): 
-    val=datas.get("G14_vib_up")
+    val=datas["Mesure_CNI"].get("G14_vib_up")
     logger.info(f"URL d'appel = {API_URL}/ data G14_vib_up = {val}")
     response = requests.post(f"{API_URL}/", json=datas, headers=headers)
     logger.info(f"response.status_code : {response.status_code} reason : {response.reason[:100]} URL : {response.url[:70]} content : {response.content[:70]}")
@@ -66,10 +66,10 @@ def main(input_filepath='./data/raw'):
     # Send login request to get an access token
     auth_response = requests.post(API_URL + "/token", data={"username": API_USER, "password": API_PWD})
     # Extract the access token from the response
-    access_token = json.loads(auth_response.text)["access_token"]
-
-    # Set headers for authenticated request
-    headers = {"Authorization": f"Bearer {access_token}"}
+    if auth_response.status_code == 200: 
+        access_token = json.loads(auth_response.text)["access_token"]
+        # Set headers for authenticated request
+        headers = {"Authorization": f"Bearer {access_token}"}
 
     try:
         while True:
@@ -79,7 +79,8 @@ def main(input_filepath='./data/raw'):
             # Extraire une ligne aléatoire
             ligne_aleatoire = df.sample(n=1)
             # Convertir la ligne en dictionnaire
-            ligne_dict = ligne_aleatoire.to_dict(orient='records')[0]
+            ligne_dict={}
+            ligne_dict["Mesure_CNI"] = ligne_aleatoire.to_dict(orient='records')[0]
             fetch_job(API_URL+ENDPOINT,ligne_dict,headers)
 
     except KeyboardInterrupt:
