@@ -1,0 +1,17 @@
+# Utiliser une image Python
+FROM python:3.12-bullseye
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de l'application
+COPY ./src/scale/scaler.py /app/.
+# Définir des variables d'environnement
+ENV DAGSHUB_USER_TOKEN = XXX
+# Installer les packages Python nécessaires
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir dagshub mlflow==2.17.1 pandas
+
+
+# Commande par défaut
+ENTRYPOINT ["python3", "scaler.py"]
