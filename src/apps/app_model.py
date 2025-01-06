@@ -22,6 +22,7 @@ from app_model_models import DataModel,Mesure,Token,UserInDB,UserOut,User,DataCo
 from dotenv import load_dotenv
 load_dotenv()
 app = FastAPI(
+    root_path="/api",
     title="Acoustic API",
     summary="Application predict and to add collection to a MongoDB collection.",
 )

@@ -22,12 +22,118 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: service-public-airflow
+spec:
+  type: NodePort
+  selector:
+    component: webserver
+    release: my-airflow
+  ports:
+  - name: port-airflow
+    protocol: TCP
+    port: 8080        # Port exposé par le service
+    targetPort: 8080  # Port sur lequel le conteneur écoute
+    nodePort: 30003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-public-grafana
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/instance: my-kube-prometheus-stack
+    app.kubernetes.io/name: grafana
+  ports:
+  - name: port-grafana
+    protocol: TCP
+    port: 3000        # Port exposé par le service
+    targetPort: 3000  # Port sur lequel le conteneur écoute
+    nodePort: 30004
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: service-inter-simu
+  labels:
+    app: app-model
 spec:
   selector:
     app: app-model  # Ce label doit correspondre au label du déploiement model
   ports:
-    - protocol: TCP
-      port: 8001        # Port exposé par le service
-      targetPort: 8000  # Port sur lequel le conteneur écoute
+    - name : web
+      #protocol: TCP
+      port: 8000        # Port exposé par le service
+      #targetPort: 8000  # Port sur lequel le conteneur écoute
   type: ClusterIP       # Service accessible uniquement dans le cluster
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/instance: model-deployment
+    release: my-kube-prometheus-stack
+  name: fastapi-prometheus-model-deployment
+  namespace: default
+spec:
+  attachMetadata:
+    node: false
+  endpoints:
+  - port: web
+    interval: 15s
+    path: /metrics
+  jobLabel: jobLabel
+  selector:
+    matchLabels:
+      app: app-model
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/instance: my-mongodb
+    release: my-kube-prometheus-stack
+  name: mongodb
+  namespace: default
+spec:
+  attachMetadata:
+    node: false
+  endpoints:
+  - port: http-metrics
+    interval: 15s
+    path: /metrics
+  jobLabel: jobLabel
+  selector:
+    matchLabels:
+      app.kubernetes.io/component : metrics
+      app.kubernetes.io/instance : my-mongodb
+      app.kubernetes.io/managed-by : Helm
+      app.kubernetes.io/name : mongodb
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/instance: my-influxdb2
+    release: my-kube-prometheus-stack
+  name: influxdb
+  namespace: default
+spec:
+  attachMetadata:
+    node: false
+  endpoints:
+  - port: http
+    interval: 15s
+    path: /metrics
+  jobLabel: jobLabel
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance : my-influxdb2
+      app.kubernetes.io/managed-by : Helm
+      app.kubernetes.io/name : influxdb2

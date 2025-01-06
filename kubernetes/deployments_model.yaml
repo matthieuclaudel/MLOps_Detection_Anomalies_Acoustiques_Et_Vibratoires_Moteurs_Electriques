@@ -22,6 +22,11 @@ spec:
               secretKeyRef:
                 name: my-token-secret
                 key: token
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongodbconnect-secret
+                key: mongodburi
         resources:
           requests:
             cpu: "60m"  # Demande de CPU pour le pod
@@ -31,6 +36,18 @@ spec:
             cpu: "100m"  # Limite de CPU pour le pod
         ports:
         - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 200  # Temps d'attente avant la première vérification
+          periodSeconds: 60      # Intervalle entre les vérifications
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 160
+          periodSeconds: 50
 ---
 # Deuxième Deployment
 apiVersion: apps/v1
@@ -47,12 +64,24 @@ spec:
         app: app_simu
         role: app-privee
     spec:
+      replicas: 0
+      initContainers:
+        - name: wait-for-service
+          image: curlimages/curl
+          command:
+            - sh
+            - -c
+            - |
+              until curl -s http://service-inter-simu.default.svc.cluster.local:8000/version | grep "version"; do
+                echo "Attente que le service soit prêt..."
+                sleep 5
+              done
       containers:
       - name: app-simu
         image: adrien157/simulation_request_model:latest
         env:
           - name: API_URL
-            value: http://service-inter-simu:8001
+            value: http://service-inter-simu:8000
           - name: API_USER
             valueFrom:
               secretKeyRef:

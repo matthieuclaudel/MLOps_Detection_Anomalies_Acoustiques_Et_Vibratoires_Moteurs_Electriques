@@ -10,14 +10,15 @@ minikube start --driver=docker --ports 30000:30000 --ports 30001:30001 --ports 3
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm install my-kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 66.3.1
-Grafana  adminPassword: prom-operator
 ```
+Grafana  adminPassword: prom-operator
+
 2. Airflow
 ```shell
 helm repo add apache-airflow https://airflow.apache.org/
 helm repo update
 helm install my-airflow apache-airflow/airflow --version 1.15.0
-
+```
 Airflow Webserver:     kubectl port-forward svc/my-airflow-webserver 8080:8080 --namespace default
 Default Webserver (Airflow UI) Login credentials:
     username: admin
@@ -26,7 +27,7 @@ Default Postgres connection credentials:
     username: postgres
     password: postgres
     port: 5432
-```
+
 3. InfluxDB port 8086
 ```shell
 helm repo add influxdata https://helm.influxdata.com/
@@ -65,7 +66,7 @@ APP VERSION: 8.0.4
 
 MongoDB&reg; can be accessed on the following DNS name(s) and ports from within your cluster:
 
-    my-mongodb.default.svc.cluster.local
+    mongodb.default.svc.cluster.local
 
 To get the root password run:
 
@@ -114,3 +115,19 @@ WARNING: There are "resources" sections in the chart not set. Using "resourcesPr
 
 6. http://inteva.hopto.org:30001/docs               model fastapi
 7. http://inteva.hopto.org:30002/Test_prediction    streamlit
+8. http://127.0.0.1:8081/                           mongo express
+9. 
+# Configuration des Redirections avec Traefik et Grafana
+
+## **Redirections Configurées**
+
+| Service      | URL de Redirection                  | Chemin d'accès | Port Cible |
+|--------------|-------------------------------------|----------------|------------|
+| **FastAPI**  | `https://inteva.hopto.org/api`      | `/api`         | `30001`    |
+| **Streamlit**| `https://inteva.hopto.org/streamlit`| `/streamlit`   | `30002`    |
+| **Airflow**  | `https://inteva.hopto.org/airflow`  | `/airflow`     | `30003`    |
+| **Grafana**  | `https://inteva.hopto.org/grafana`  | `/grafana`     | `30004`    |
+
+## **Sécurité**
+- **TLS** activé : Certificats gérés via **Let's Encrypt**.
+- **Authentification Basique** : Mise en place sur toutes les routes.
