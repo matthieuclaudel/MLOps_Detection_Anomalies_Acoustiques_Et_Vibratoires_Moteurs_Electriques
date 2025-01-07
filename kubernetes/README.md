@@ -113,11 +113,7 @@ WARNING: There are "resources" sections in the chart not set. Using "resourcesPr
   - resources
 +info https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
-6. http://inteva.hopto.org:30001/docs               model fastapi
-7. http://inteva.hopto.org:30002/Test_prediction    streamlit
-8. http://127.0.0.1:8081/                           mongo express
-9. 
-# Configuration des Redirections avec Traefik et Grafana
+# Configuration des Redirections avec Traefik
 
 ## **Redirections Configurées**
 
@@ -131,3 +127,4 @@ WARNING: There are "resources" sections in the chart not set. Using "resourcesPr
 ## **Sécurité**
 - **TLS** activé : Certificats gérés via **Let's Encrypt**.
 - **Authentification Basique** : Mise en place sur toutes les routes.
+

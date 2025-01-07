@@ -22,7 +22,6 @@ from app_model_models import DataModel,Mesure,Token,UserInDB,UserOut,User,DataCo
 from dotenv import load_dotenv
 load_dotenv()
 app = FastAPI(
-    root_path="/api",
     title="Acoustic API",
     summary="Application predict and to add collection to a MongoDB collection.",
 )
@@ -198,7 +197,7 @@ async def root():
         <h1>Bienvenue sur mon application FastAPI Mesure acoustic</h1>
         <h2>by Datascientest!</h2>
         <p>Pour accéder à la documentation de l'API, cliquez sur le lien ci-dessous :</p>
-        <a href="/docs" target="_blank">Accéder à la documentation de l'API</a>
+        <a href="/api/docs" target="_blank">Accéder à la documentation de l'API</a>
     </body>
     </html>
     """
@@ -223,4 +222,4 @@ async def put_relaod():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app_model:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app_model:app", host="0.0.0.0", port=8000, root_path="/api")
