@@ -1,0 +1,14 @@
+# Utiliser une image Python de base
+FROM python:3.12-bullseye
+
+# Installer les dépendances nécessaires
+RUN pip install --no-cache-dir pandas influxdb-client
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier le script Python dans le conteneur
+COPY ./src/scale/load_to_influx.py /app/load_to_influx.py
+
+# Définir la commande d'exécution par défaut
+ENTRYPOINT ["python", "/app/load_to_influx.py"]

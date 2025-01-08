@@ -1,0 +1,14 @@
+# Utiliser une image Python de base
+FROM python:3.12-bullseye
+
+# Installer les dépendances nécessaires
+RUN pip install --no-cache-dir pymongo pandas influxdb-client
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier le script Python dans le conteneur
+COPY ./src/scale/get_from_mongo.py /app/get_from_mongo.py
+
+# Définir la commande d'exécution par défaut
+ENTRYPOINT ["python", "/app/get_from_mongo.py"]
