@@ -1,7 +1,6 @@
 Détection des anomalies acoustiques et vibratoires des moteurs électriques
 ==============================
-
-L'objectif de ce projet est d'automatiser la détection d'anomalies sur des moteurs électriques à la sortie d'une chaîne de production.
+🎯 Ce projet vise à automatiser la détection d'anomalies acoustiques et vibratoires sur des moteurs électriques à la sortie d'une chaîne de production. L'objectif final est d'assurer un contrôle qualité précis et fiable tout en réduisant les coûts et les temps d'inspection. 🚀
 
 ## Equipe projet
 
@@ -14,62 +13,6 @@ L'objectif de ce projet est d'automatiser la détection d'anomalies sur des mote
 
 ![Architecture](./data/Archi.png)
 
-## Repository Tree
-
-    ├── LICENSE
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── logs               <- Logs from training and predicting
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   ├── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │   │   └── visualize.py
-    │   └── config         <- Describe the parameters used in train_model.py and predict_model.py
-
---------
-
-## Installation
-## 🎬 Getting Started for Developers
-
-```shell
-git clone https://github.com/matthieuclaudel/MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques
-```
-
-
----
-
 ## Table des Matières
 
 1. [Installation](#installation)
@@ -78,14 +21,14 @@ git clone https://github.com/matthieuclaudel/MLOps_Detection_Anomalies_Acoustiqu
 4. [Prérequis](#prérequis)
 5. [Installation Kubernetes](#installation-kubernetes)
 6. [Orchestration et Charts Helm](#orchestration-et-charts-helm)
-7. [Configuration des Redirections avec Traefik](#configuration-des-redirections-avec-traefik)
-8. [Évaluation et Surveillance](#évaluation-et-surveillance)
-9. [Pods Créés](#pods-créés)
-10. [Architecture Globale](#architecture-globale)
-11. [Contributions](#contributions)
-12. [Licence](#licence)
-13. [Remerciements](#remerciements)
-
+7. [Évaluation et Surveillance](#évaluation-et-surveillance)
+8. [Pods Créés](#pods-créés)
+9. [Architecture Globale](#architecture-globale)
+10. [Contributions](#contributions)
+11. [Licence](#licence)
+12. [Remerciements](#remerciements)
+13. [Répertoires](#Repository-Tree)
+14. [Configuration des Redirections avec Traefik](#Bonus-:-configuration-des-redirections-avec-traefik)
 ---
 
 ## Installation
@@ -133,11 +76,7 @@ source venv/bin/activate
 python main.py
 ```
 
-⚙️ **Fonction principale :** Lors de son exécution, le script `main.py` récupère les données depuis DVC, crée les ensembles X\_test, X\_train, Y\_test, et Y\_train dans les dossiers `data`, applique une transformation avec un standard scaler, entraîne un modèle, et le stocke dans Dagshub (MLflow Cloud). 🚀
-
-3. **Accéder à l'application via votre navigateur :**
-
-Par exemple : `http://localhost:3000`. 🌐
+⚙️ Fonction principale : Lors de son exécution, le script main.py récupère les données depuis DVC, crée les ensembles X_test, X_train, Y_test, et Y_train dans les dossiers data, applique une transformation avec un standard scaler, entraîne un modèle, et le stocke dans Dagshub (MLflow Cloud). 🚀
 
 ---
 
@@ -204,33 +143,7 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 curl -sfL https://get.k3s.io | sh -
 ```
 
-🚀 **Déployer des applications avec Helm :**
-
-```bash
-helm repo add stable https://charts.helm.sh/stable
-helm repo update
-helm install my-app stable/chart-name
-```
-
----
-
 ## Orchestration et Charts Helm
-
-### Exemple de déploiement avec Minikube
-
-🌐 **Activer les ports nécessaires :**
-
-```bash
-minikube service multi-port-service-public --url
-```
-
-Ou démarrer Minikube avec des ports spécifiques :
-
-```bash
-minikube start --driver=docker --ports 30000:30000 --ports 30001:30001 \
---ports 30002:30002 --ports 30003:30003 --ports 30004:30004 \
---ports 8081:8081 --ports 30005:30005 --ports 27017:27017
-```
 
 📈 **Prometheus Stack :**
 
@@ -247,21 +160,38 @@ helm repo add apache-airflow https://airflow.apache.org/
 helm repo update
 helm install my-airflow apache-airflow/airflow --version 1.15.0
 ```
+✈️**Déploiement d'InfluxDB (port 8086)**
 
----
+Pour déployer InfluxDB 2 avec Helm, utilisez les commandes suivantes :
 
-## Configuration des Redirections avec Traefik
+```bash
+helm repo add influxdata https://helm.influxdata.com/
+helm repo update
+helm install my-influxdb2 influxdata/influxdb2 --version 2.1.2
+```
 
-### Routes Configurées
+InfluxDB 2 est déployé comme un StatefulSet sur votre cluster. Vous pouvez y accéder en utilisant le nom de service suivant : ✈️**my-influxdb2**.
 
-| Service       | URL de Redirection                   | Port  |
-| ------------- | ------------------------------------ | ----- |
-| **FastAPI**   | `https://inteva.hopto.org/api`       | 30001 |
-| **Streamlit** | `https://inteva.hopto.org/streamlit` | 30002 |
-| **Airflow**   | `https://inteva.hopto.org/airflow`   | 30003 |
-| **Grafana**   | `https://inteva.hopto.org/grafana`   | 30004 |
+Pour récupérer le mot de passe de l'utilisateur `admin` :
 
----
+```bash
+echo $(kubectl get secret my-influxdb2-auth -o "jsonpath={.data['admin-password']}" --namespace default | base64 --decode)
+```
+
+**Déploiement de MongoDB (port 27017)**
+
+Pour déployer MongoDB et Mongo Express avec Helm, utilisez les commandes suivantes :
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add cowboysysop https://cowboysysop.github.io/charts/
+helm repo update
+helm install my-mongodb bitnami/mongodb --version 16.3.3 -f kubernetes/values-mongodb.yaml
+helm install my-mongo-express cowboysysop/mongo-express --version 6.5.2 -f kubernetes/values-mongo-express.yaml
+helm upgrade my-mongo-express cowboysysop/mongo-express --version 6.5.2 -f kubernetes/values-mongo-express.yaml
+```
+
+MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichier `values-mongodb.yaml`.
 
 ## Évaluation et Surveillance
 
@@ -298,20 +228,25 @@ helm install my-airflow apache-airflow/airflow --version 1.15.0
 🚀 Voici les pods actifs et leurs fonctions principales :
 
 - **alertmanager-my-kube-prometheus-stack-alertmanager-0** : Supervision des alertes Prometheus.
+- **my-influxdb2**
+- **my-kube-prometheus-stack-kube-state-metrics**
+- **my-kube-prometheus-stack-operator**
+- **my-kube-prometheus-stack-prometheus-node-exporter**
+- **my-mongo-express**
+- **my-mongodb**
+- **prometheus-my-kube-prometheus-stack-prometheus**
 - **app-streamlit-deployment-599d5b7b5f-xcckj** : Interface utilisateur pour la visualisation des prédictions.
 ![-](./images/Capture_streamlit.jpg)
-
 - **curl-pod** : Outil de diagnostic pour tester les communications entre services.
 - **model-deployment-674988f5c7-q8pw7** : Déploiement du modèle ML pour les prédictions.
 ![-](./images/Capture_fastapi_root.jpg)
 ![-](./images/Capture_fastapi_docs.jpg)
-
 - **my-airflow-postgresql-0** : Base de données pour Apache Airflow.
 - **my-airflow-redis-0** : Cache Redis utilisé par Airflow.
 - **my-airflow-scheduler-579d984dd7-9xh99** : Gestion des tâches planifiées.
 - **my-airflow-statsd-66699fb8b9-rxlg6** : Collecte des statistiques d'Airflow.
 ![-](./images/Capture_airflow_dags.jpg)
-- **grafana**
+- **my-kube-prometheus-stack-grafana**
 ![-](./images/Capture_grafana.jpg)
 ---
 
@@ -320,15 +255,164 @@ helm install my-airflow apache-airflow/airflow --version 1.15.0
 🎨 **Schéma de l'architecture technique** :
 
 1. API FastAPI pour la gestion des prédictions et des utilisateurs.
-2. Pipeline CI/CD pour l'entraînement et le déploiement automatisé.
-3. Monitoring centralisé avec Grafana et Prometheus.
-4. Orchestration des services avec Kubernetes et Helm.
-5. Stockage des données avec MongoDB et InfluxDB.
+# 📘 Documentation de l'API FastAPI
+
+Cette documentation décrit en détail les endpoints disponibles dans l'application FastAPI, ainsi que leurs utilisations principales.
+
+---
+
+## 📂 **Résumé des Endpoints**
+
+---
+
+### 🧑‍💻 Gestion des utilisateurs
+
+#### **POST /register**
+
+- **Résumé :** Crée un nouvel utilisateur.
+- **Description :** Enregistre un utilisateur avec un mot de passe haché et retourne les détails de l'utilisateur nouvellement créé.
+- **Utilité :** Ajout d'utilisateurs au système.
+
+#### **POST /token**
+
+- **Résumé :** Obtenir un token d'accès.
+- **Description :** Permet aux utilisateurs existants de se connecter et de récupérer un token JWT pour authentification.
+- **Utilité :** Authentification et sécurisation des endpoints.
+
+---
+
+### 🔮 Modèle de prédiction
+
+#### **POST /predict-test/**
+
+- **Résumé :** Prédiction manuelle avec le modèle.
+- **Description :** Effectue une prédiction avec le modèle sans enregistrer les données dans la base MongoDB.
+- **Utilité :** Tester le modèle localement sans archivage.
+
+#### **POST /predict/**
+
+- **Résumé :** Prédiction automatique et archivage.
+- **Description :** Utilise le modèle pour prédire et sauvegarde les données (y compris la prédiction) dans MongoDB.
+- **Utilité :** Opération complète de prédiction avec archivage.
+
+#### **POST /Archivage/**
+
+- **Résumé :** Test d'archivage manuel.
+- **Description :** Insère directement une donnée dans MongoDB.
+- **Utilité :** Test de l'archivage des données.
+
+---
+
+### ⚙️ Gestion des modèles
+
+#### **GET /version**
+
+- **Résumé :** Obtenir les versions actuelles.
+- **Description :** Retourne les versions du modèle et du standard scaler utilisés pour les prédictions.
+- **Utilité :** Vérification des versions déployées.
+
+#### **PUT /reload**
+
+- **Résumé :** Recharger le modèle depuis le cloud.
+- **Description :** Télécharge et charge la dernière version du modèle et du scaler depuis Dagshub.
+- **Utilité :** Mise à jour des modèles.
+
+---
+
+### 🌐 Endpoints généraux
+
+#### **GET /**
+
+- **Résumé :** Page d'accueil HTML.
+- **Description :** Affiche une page d'accueil simple avec un lien vers la documentation Swagger.
+- **Utilité :** Présentation et accès rapide à la documentation.
+
+---
+
+## ℹ️ **Informations complémentaires**
+
+### **Bibliothèques principales utilisées :**
+
+- **FastAPI :** Framework principal pour l'API.
+- **MongoDB :** Base de données utilisée pour stocker les mesures et les prédictions.
+- **Dagshub et MLflow :** Outils pour gérer et versionner les modèles.
+- **Prometheus :** Outil de monitoring via l'intégration Instrumentator.
+
+---
+
+### **Notes techniques :**
+
+- L'authentification repose sur des tokens JWT générés avec un secret aléatoire (non persistant entre redémarrages).
+- Les modèles et scalers sont chargés depuis un serveur MLflow dans Dagshub et sauvegardés localement en Pickle.
+
+---
+
+3. Pipeline CI/CD pour l'entraînement et le déploiement automatisé.
+4. Monitoring centralisé avec Grafana et Prometheus.
+5. Orchestration des services avec Kubernetes et Helm.
+6. Stockage des données avec MongoDB et InfluxDB.
 
 ---
 
 ## Contributions
 
 🤝 Les contributions sont les bienvenues ! Veuillez soumettre vos propositions via des pull requests sur le dépôt GitHub.
+
+---
+## Repository Tree
+
+    ├── LICENSE
+    ├── README.md          <- The top-level README for developers using this project.
+    ├── data
+    │   ├── external       <- Data from third party sources.
+    │   ├── interim        <- Intermediate data that has been transformed.
+    │   ├── processed      <- The final, canonical data sets for modeling.
+    │   └── raw            <- The original, immutable data dump.
+    │
+    ├── logs               <- Logs from training and predicting
+    │
+    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    │
+    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
+    │                         the creator's initials, and a short `-` delimited description, e.g.
+    │                         `1.0-jqp-initial-data-exploration`.
+    │
+    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
+    │
+    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
+    │   └── figures        <- Generated graphics and figures to be used in reporting
+    │
+    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
+    │                         generated with `pip freeze > requirements.txt`
+    │
+    ├── src                <- Source code for use in this project.
+    │   ├── __init__.py    <- Makes src a Python module
+    │   │
+    │   ├── data           <- Scripts to download or generate data
+    │   │   └── make_dataset.py
+    │   │
+    │   ├── features       <- Scripts to turn raw data into features for modeling
+    │   │   └── build_features.py
+    │   │
+    │   ├── models         <- Scripts to train models and then use trained models to make
+    │   │   │                 predictions
+    │   │   ├── predict_model.py
+    │   │   └── train_model.py
+    │   │
+    │   ├── visualization  <- Scripts to create exploratory and results oriented visualizations
+    │   │   └── visualize.py
+    │   └── config         <- Describe the parameters used in train_model.py and predict_model.py
+---
+
+## Bonus : Configuration des Redirections avec Traefik
+
+### Routes Configurées
+
+| Service       | URL de Redirection                   | Port  |
+| ------------- | ------------------------------------ | ----- |
+| **FastAPI**   | `https://inteva.hopto.org/api`       | 30001 |
+| **Streamlit** | `https://inteva.hopto.org/streamlit` | 30002 |
+| **Airflow**   | `https://inteva.hopto.org/airflow`   | 30003 |
+| **Grafana**   | `https://inteva.hopto.org/grafana`   | 30004 |
 
 ---
