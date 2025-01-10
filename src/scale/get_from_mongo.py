@@ -9,8 +9,7 @@ MONGO_DB = os.getenv('MONGO_DB', 'production')
 MONGO_COLLECTION = os.getenv('MONGO_COLLECTION', 'api_mesures')
 
 INFLUXDB_URL = os.getenv('INFLUXDB_URL', 'http://influxdb:8086')
-INFLUXDB_TOKEN = os.getenv('INFLUXDB_TOKEN', '1Yrce-Jd5WhAMpQOxL7njYGXw6dYHlPmYGuj0Wq8PwApzXmuagtd-MxVfD5p3jxzLUHzCCWFLx
-xeCIIogq7G0A==')
+INFLUXDB_TOKEN = os.getenv('INFLUXDB_TOKEN', '1Yrce-Jd5WhAMpQOxL7njYGXw6dYHlPmYGuj0Wq8PwApzXmuagtd-MxVfD5p3jxzLUHzCCWFLxxeCIIogq7G0A==')
 INFLUXDB_ORG = os.getenv('INFLUXDB_ORG', 'my-org')
 INFLUXDB_BUCKET = os.getenv('INFLUXDB_BUCKET', 'preprocessed')
 
