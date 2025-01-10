@@ -11,6 +11,7 @@ import numpy as np
 import os
 import dagshub
 import mlflow
+import pandas as pd
 from mlflow import MlflowClient
 
 # Configuration du DAG
