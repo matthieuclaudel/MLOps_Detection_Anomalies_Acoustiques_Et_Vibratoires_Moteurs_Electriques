@@ -54,12 +54,12 @@ def connect_to_mlflow_and_dagshub():
 
 # Fonction pour charger les données train depuis le github local
 def load_data_train_from_github():
-    data_train = pd.read_csv('https://raw.githubusercontent.com/crotelius77/MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques/main/data/processed/processed_data.csv', sep=';', decimal=',')
+    data_train = pd.read_csv('https://raw.githubusercontent.com/crotelius77/MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques/main/raw/DATASET_SCALED.zip', sep=';', decimal=',')
     return data_train
 
 # Fonction pour charger les données test depuis le github local
 def load_data_test_from_github():
-    data_test = pd.read_csv('https://raw.githubusercontent.com/crotelius77/MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques/main/data/processed/processed_data.csv', sep=';', decimal=',')
+    data_test = pd.read_csv('https://raw.githubusercontent.com/crotelius77/MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques/main/raw/DATASET_VALIDATION_SCALED.csv', sep=';', decimal=',')
     return data_test
 
 # Fonction pour entraîner et évaluer les modèles
@@ -96,12 +96,24 @@ def train_and_evaluate_model():
     mlflow.sklearn.log_model(best_model, "best_model")
     mlflow.log_metric("best_score", best_score)
 
-# Tâches Airflow
-#fetch_data_task = PythonOperator(
-#    task_id='fetch_data',
-#    python_callable=fetch_data_from_influxdb,
-#    dag=dag,
-#)
+#Tâches Airflow
+connect_task = PythonOperator(
+    task_id='connect_MLFlow_and_DagsHub',
+    python_callable=connect_to_mlflow_and_dagshub,
+    dag=dag,
+)
+
+load_task_1 = PythonOperator(
+    task_id='load_data_train_from_github',
+    python_callable=load_data_train_from_github,
+    dag=dag,
+)
+
+load_task_2 = PythonOperator(
+    task_id='load_data_test_from_github',
+    python_callable=load_data_test_from_github,
+    dag=dag,
+)
 
 train_model_task = PythonOperator(
     task_id='train_model',
@@ -110,4 +122,4 @@ train_model_task = PythonOperator(
 )
 
 # Dépendances des tâches
-#fetch_data_task >> train_model_task
+connect_task >> [load_task_1,load_task_2] >> train_model_task
