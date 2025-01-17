@@ -2,6 +2,27 @@ import os
 import pandas as pd
 from pymongo import MongoClient
 
+def process_mongo_data(data):
+    """
+    Transforme les données MongoDB pour créer un DataFrame où chaque clé de `Mesure_CNI`
+    devient une colonne distincte.
+    """
+    processed_rows = []
+
+    for record in data:
+        # Extraire la date de création
+        row = {"date_de_creation": record.get("date_de_creation")}
+
+        # Extraire les mesures et les ajouter comme colonnes
+        mesure_cni = record.get("Mesure_CNI", {})
+        row.update(mesure_cni)
+
+        # Ajouter la ligne transformée
+        processed_rows.append(row)
+
+    # Créer un DataFrame pandas à partir des lignes transformées
+    return pd.DataFrame(processed_rows)
+
 def fetch_data_from_mongo(mongo_uri, database_name, collection_name, output_file):
     # Connexion à MongoDB
     client = MongoClient(mongo_uri)
@@ -17,13 +38,9 @@ def fetch_data_from_mongo(mongo_uri, database_name, collection_name, output_file
         print("No data found in the collection.")
         return
 
-    # Conversion des données en DataFrame pandas
-    print("Converting data to pandas DataFrame...")
-    df = pd.DataFrame(data)
-
-    # Suppression de l'_id car il n'est pas directement sérialisable en CSV
-    if "_id" in df.columns:
-        df.drop(columns=["_id"], inplace=True)
+    # Transformation des données
+    print("Processing data...")
+    df = process_mongo_data(data)
 
     # Écriture des données dans un fichier CSV
     print(f"Writing data to {output_file}...")
