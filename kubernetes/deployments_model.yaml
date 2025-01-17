@@ -64,7 +64,6 @@ spec:
         app: app_simu
         role: app-privee
     spec:
-      replicas: 0
       initContainers:
         - name: wait-for-service
           image: curlimages/curl
@@ -81,7 +80,7 @@ spec:
         image: adrien157/simulation_request_model:latest
         env:
           - name: API_URL
-            value: http://service-inter-simu:8000
+            value: http://service-inter-simu:8000/
           - name: API_USER
             valueFrom:
               secretKeyRef:

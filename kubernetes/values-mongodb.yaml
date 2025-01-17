@@ -72,9 +72,9 @@ auth:
   ## @param auth.passwords List of passwords for the custom users set at `auth.usernames`
   ## @param auth.databases List of custom databases to be created during the initialization
   ##
-  usernames: ["adrien","matthieu","Ludovic","api"]
-  passwords: ["adrien","matthieu","Ludovic","api"]
-  databases: ["production","production","production"]
+  usernames: ["adrien","matthieu","Ludovic","Harold","api"]
+  passwords: ["adrien","matthieu","Ludovic","Harold","api"]
+  databases: ["production","production","production","production","production"]
   ## @param auth.replicaSetKey Key used for authentication in the replicaset (only when `architecture=replicaset`)
   ##
   replicaSetKey: ""
