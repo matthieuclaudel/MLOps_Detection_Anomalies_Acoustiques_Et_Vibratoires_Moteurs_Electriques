@@ -160,23 +160,6 @@ helm repo add apache-airflow https://airflow.apache.org/
 helm repo update
 helm install my-airflow apache-airflow/airflow --version 1.15.0
 ```
-✈️**Déploiement d'InfluxDB (port 8086)**
-
-Pour déployer InfluxDB 2 avec Helm, utilisez les commandes suivantes :
-
-```bash
-helm repo add influxdata https://helm.influxdata.com/
-helm repo update
-helm install my-influxdb2 influxdata/influxdb2 --version 2.1.2
-```
-
-InfluxDB 2 est déployé comme un StatefulSet sur votre cluster. Vous pouvez y accéder en utilisant le nom de service suivant : ✈️**my-influxdb2**.
-
-Pour récupérer le mot de passe de l'utilisateur `admin` :
-
-```bash
-echo $(kubectl get secret my-influxdb2-auth -o "jsonpath={.data['admin-password']}" --namespace default | base64 --decode)
-```
 
 **Déploiement de MongoDB (port 27017)**
 
@@ -204,7 +187,7 @@ MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichi
 🔄 Les données collectées par FastAPI sont intégrées dans MongoDB avec des métadonnées comme l'heure, le résultat des prédictions et les mesures associées.
 
 - Airflow se charge de récupérer ces données pour effectuer des étapes de transformation comme la standardisation via un scaler.
-- Une fois prêtes, les données sont stockées dans InfluxDB pour un usage ultérieur dans les phases de réentraînement.
+- Une fois prêtes, les données sont stockées pour un usage ultérieur dans les phases de réentraînement.
 - Un nouveau modèle validé est automatiquement rechargé dans les pods concernés après chaque itération de réentraînement. ⚡
 
 ### Collecte et CI/CD
@@ -216,7 +199,7 @@ MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichi
 
 📉 Le stack Prometheus et Grafana permet de suivre :
 
-- Les métriques issues de FastAPI, MongoDB et InfluxDB.
+- Les métriques issues de FastAPI, MongoDB.
 - Les performances des ressources matérielles comme le CPU, la RAM et les disques.
 - Les volumes de requêtes et les latences pour chaque service.
 - Des alertes configurées pour détecter les anomalies ou les baisses de performance. 🚨
@@ -228,7 +211,6 @@ MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichi
 🚀 Voici les pods actifs et leurs fonctions principales :
 
 - **alertmanager-my-kube-prometheus-stack-alertmanager-0** : Supervision des alertes Prometheus.
-- **my-influxdb2**
 - **my-kube-prometheus-stack-kube-state-metrics**
 - **my-kube-prometheus-stack-operator**
 - **my-kube-prometheus-stack-prometheus-node-exporter**
@@ -350,7 +332,7 @@ Cette documentation décrit en détail les endpoints disponibles dans l'applicat
 3. Pipeline CI/CD pour l'entraînement et le déploiement automatisé.
 4. Monitoring centralisé avec Grafana et Prometheus.
 5. Orchestration des services avec Kubernetes et Helm.
-6. Stockage des données avec MongoDB et InfluxDB.
+6. Stockage des données avec MongoDB.
 
 ---
 

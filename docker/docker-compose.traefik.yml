@@ -1,0 +1,116 @@
+version: "4.3"
+services:
+  traefik:
+    image: "traefik:v3.2"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--accesslog"
+      - "--accesslog.filepath=/var/log/traefik/access.log"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entryPoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=arthos173@hotmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--providers.file.filename=/etc/traefik/dynamic.yml"
+      #Crowdsec Bouncer Traefik Plugin » v1.3.5
+      - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+      - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.version=v1.3.5"
+      #GeoBlock
+      - "--experimental.plugins.geoblock.modulename=github.com/PascalMinder/geoblock"
+      - "--experimental.plugins.geoblock.version=v0.2.8"
+      #waf
+      - "--experimental.plugins.traefik-modsecurity-plugin.modulename=github.com/acouvreur/traefik-modsecurity-plugin"
+      - "--experimental.plugins.traefik-modsecurity-plugin.version=v1.3.0"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    depends_on:
+      - crowdsec
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      #- ./traefik.yml:/etc/traefik/traefik.yml
+      - ./dynamic.yml:/etc/traefik/dynamic.yml
+      - "./logsTraefik:/var/log/traefik"
+    networks:
+      - backend
+      - proxy
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`inteva.hopto.org`) && PathPrefix(`/whoami`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+      #Define midleware 
+      ## Middleware configuration
+    networks:
+      - backend
+      
+  crowdsec:
+    image: crowdsecurity/crowdsec
+    environment:
+      COLLECTIONS: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
+      GID: "${GID-1000}"
+    expose:
+      - "8080"
+    volumes:
+      - "./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml"
+      - "./logsTraefik:/var/log/traefik:ro"
+      - "/crowdsec-db:/var/lib/crowdsec/data/"
+      - "/crowdsec-config:/etc/crowdsec/"
+      - ./crowdsec/appsec.yaml:/etc/crowdsec/acquis.d/appsec.yaml
+    restart: unless-stopped
+    labels:
+      - traefik.enable=false
+    networks:
+      - backend
+      - proxy
+
+  waf:
+    image: owasp/modsecurity-crs:4.10.0-apache-alpine-202501050801
+
+    environment:
+      - PARANOIA=1
+      - ANOMALY_INBOUND=10
+      - ANOMALY_OUTBOUND=5
+      - BACKEND=http://dummy
+      # New in CRS 4
+      - REPORTING_LEVEL=2
+
+      #######################################################
+      # ModSecurity ENV Variables
+      #######################################################
+      - MODSEC_DEBUG_LOGLEVEL=1
+      - MODSEC_AUDIT_LOG_FORMAT=JSON
+      - MODSEC_RULE_ENGINE=On
+
+    networks:
+      - backend
+
+  dummy:
+    image: traefik/whoami
+    networks:
+      - backend
+
+volumes:
+  logs:
+  crowdsec-db:
+  crowdsec-config:
+    ## Networks part
+networks:
+  proxy:
+    external: true
+  backend:
+    driver: bridge
