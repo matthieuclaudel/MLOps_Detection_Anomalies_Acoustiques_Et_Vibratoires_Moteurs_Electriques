@@ -1,0 +1,16 @@
+dags:
+  persistence:
+    enabled: true
+    existingClaim: airflow-dags-folder
+
+executor: CeleryKubernetesExecutor
+
+env:
+  - name: MLFLOW_TRACKING_URI
+    value: "https://dagshub.com/crotelius77/MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques.mlflow"
+  - name: MLFLOW_EXPERIMENT_NAME
+    value: "accoustic_vibration_models"
+  - name: DAGSHUB_USER
+    value: "crotelius77"
+  - name: DAGSHUB_TOKEN
+    value: "d2104c3604c3aeaca92c4ad3b4d08f41864891e3"

@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   claimRef:
-    namespace: airflow
+    namespace: default
     name: data-folder
   hostPath:
-    path: "/Users/matthieuclaudel/Desktop/MLE_projet/airflow/data"
+    path: "/home/adrien/MLOps_Detection_Anomalies_Acoustiques_Et_Vibratoires_Moteurs_Electriques/data/raw"
