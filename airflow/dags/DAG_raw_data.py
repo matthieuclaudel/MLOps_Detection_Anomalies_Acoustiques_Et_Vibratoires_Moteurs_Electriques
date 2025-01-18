@@ -7,7 +7,7 @@ import os
 
 # Configuration des volumes partagés et des chemins
 SHARED_DATA_PATH = "/shared_data"
-OUTPUT_FILE = f"{SHARED_DATA_PATH}/output.csv"
+OUTPUT_FILE_PATH = f"{SHARED_DATA_PATH}/raw/raw.csv"
 
 # Volume partagé entre les pods
 shared_volume = k8s.V1Volume(
@@ -50,6 +50,9 @@ with DAG(
         name="mongo-to-csv",
         namespace="default",
         image="ludodo/mlops-dst-project-get-from-mongo:latest",
+        env_vars={
+            "OUTPUT_FILE": OUTPUT_FILE_PATH,
+        },
         secrets=[mongo_secret],
         volumes=[shared_volume],
         volume_mounts=[shared_volume_mount],
