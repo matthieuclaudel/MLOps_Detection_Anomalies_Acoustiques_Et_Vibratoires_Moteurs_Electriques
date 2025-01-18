@@ -53,7 +53,7 @@ if __name__ == "__main__":
     MONGO_URI = os.getenv('MONGO_URI', 'ERROR')
     MONGO_DB = os.getenv('MONGO_DB', 'production')
     MONGO_COLLECTION = os.getenv('MONGO_COLLECTION', 'api_mesures')
-    output_file = os.getenv("OUTPUT_FILE", "/shared_data/raw/raw.csv")
+    output_file = os.getenv("OUTPUT_FILE", "/shared_data/raw.csv")
 
     print(f"MONGO_URI {MONGO_URI}")
 

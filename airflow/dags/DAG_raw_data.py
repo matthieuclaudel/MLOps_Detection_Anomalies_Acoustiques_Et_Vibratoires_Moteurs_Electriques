@@ -7,7 +7,7 @@ import os
 
 # Configuration des volumes partagés et des chemins
 SHARED_DATA_PATH = "/shared_data"
-OUTPUT_FILE_PATH = f"{SHARED_DATA_PATH}/raw/raw.csv"
+OUTPUT_FILE_PATH = f"{SHARED_DATA_PATH}/raw.csv"
 
 # Volume partagé entre les pods
 shared_volume = k8s.V1Volume(
