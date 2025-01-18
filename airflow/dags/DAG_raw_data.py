@@ -50,9 +50,6 @@ with DAG(
         name="mongo-to-csv",
         namespace="default",
         image="ludodo/mlops-dst-project-get-from-mongo:latest",
-        env_vars={
-            "OUTPUT_FILE": OUTPUT_FILE,
-        },
         secrets=[mongo_secret],
         volumes=[shared_volume],
         volume_mounts=[shared_volume_mount],
