@@ -43,11 +43,19 @@ with DAG(
         namespace="default",
         image="ludodo/mlops-dst-project-get-from-mongo:latest",
         env_vars={
-            "MONGO_URI": "mongodb://mongodb:27017",
-            "MONGO_DB": "production",
-            "MONGO_COLLECTION": "api_mesures",
             "OUTPUT_FILE": OUTPUT_FILE,
         },
+        secrets=[
+            k8s.V1EnvVar(
+                name="MONGO_URI",
+                value_from=k8s.V1EnvVarSource(
+                    secret_key_ref=k8s.V1SecretKeySelector(
+                        name="mongodbconnect-secret",
+                        key="mongodburi",
+                    )
+                )
+            )
+        ],
         volumes=[shared_volume],
         volume_mounts=[shared_volume_mount],
         get_logs=True,
