@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.secrets import Secret
 from kubernetes.client import models as k8s
 from datetime import datetime
 import os
@@ -17,6 +18,13 @@ shared_volume = k8s.V1Volume(
 shared_volume_mount = k8s.V1VolumeMount(
     name='data-folder',
     mount_path=SHARED_DATA_PATH,
+)
+
+mongo_secret = Secret(
+    deploy_type="env",  # Injecter dans les variables d'environnement
+    deploy_target="MONGO_URI",  # Nom de la variable d'environnement
+    secret="mongodbconnect-secret",  # Nom du secret Kubernetes
+    key="mongodburi",  # Clé dans le secret
 )
 
 # Définir le DAG
@@ -45,17 +53,7 @@ with DAG(
         env_vars={
             "OUTPUT_FILE": OUTPUT_FILE,
         },
-        secrets=[
-            k8s.V1EnvVar(
-                name="MONGO_URI",
-                value_from=k8s.V1EnvVarSource(
-                    secret_key_ref=k8s.V1SecretKeySelector(
-                        name="mongodbconnect-secret",
-                        key="mongodburi",
-                    )
-                )
-            )
-        ],
+        secrets=[mongo_secret],
         volumes=[shared_volume],
         volume_mounts=[shared_volume_mount],
         get_logs=True,
