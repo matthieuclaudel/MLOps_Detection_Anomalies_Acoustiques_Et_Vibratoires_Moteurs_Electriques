@@ -8,14 +8,14 @@ import pickle
 
 # Charger les données
 def load_data():
-    data_train = pd.read_csv('/app/test/data_train.csv', sep=',', index_col=0)
-    data_test = pd.read_csv('/app/test/data_test.csv', sep=',', index_col=0)
+    data_train = pd.read_csv('/app/test/data_train.csv', sep=',')
+    data_test = pd.read_csv('/app/test/data_test.csv', sep=',')
     return data_train, data_test
 
 # Entraîner et évaluer le modèle
 def train_and_evaluate_model():
     X_train, data_test = load_data()        
-    X_test = data_test.drop(columns=['target'],axis=1)
+    X_test = data_test.drop(columns=['target','index'],axis=1)
     y_test = data_test['target']
 
     best_model = None
