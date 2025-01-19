@@ -30,14 +30,11 @@ def load_data():
     data_validation_scaled.to_csv('/app/test/data_test.csv', index=False)
     
     print('Data loaded successfully')
-    return scaler_model
-
-def saved_scaler_model(x):   
+  
     # Sauvegarde du modèle de normalisation dans le répertoire /app/test
     with open('/app/test/scaler_model.pkl', 'wb') as f:
-        pickle.dump(x, f)
+        pickle.dump(scaler_model, f)
 
 
 if __name__ == "__main__":
     load_data()
-    saved_scaler_model(scaler_model)
