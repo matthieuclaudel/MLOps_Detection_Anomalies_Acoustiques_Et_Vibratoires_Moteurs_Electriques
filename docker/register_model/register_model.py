@@ -37,5 +37,15 @@ def register_model():
     mlflow.end_run()
     print('model registered')
 
+def register_scaler():
+    connect_to_mlflow_and_dagshub()
+    with open('/app/test/scaler_model.pkl', 'rb') as f:
+        scaler_model = pickle.load(f)
+    mlflow.sklearn.log_model(scaler_model, "scaler_model")
+    mlflow.end_run()
+    print('scaler registered')
+
+
 if __name__ == "__main__":
     register_model()
+    register_scaler()

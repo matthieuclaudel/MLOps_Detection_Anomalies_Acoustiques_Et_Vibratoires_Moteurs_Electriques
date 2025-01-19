@@ -41,5 +41,3 @@ def saved_scaler_model(x):
 if __name__ == "__main__":
     load_data()
     saved_scaler_model(scaler_model)
-    
-    
