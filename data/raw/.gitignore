@@ -1,3 +1,9 @@
 DATASET_GO_NG.csv
 DATASET_FFT.csv
 raw.csv
+data_test.csv
+data_train.csv
+best_model.pkl
+best_score.pkl
+model_params.pkl
+scaler_model.pkl
