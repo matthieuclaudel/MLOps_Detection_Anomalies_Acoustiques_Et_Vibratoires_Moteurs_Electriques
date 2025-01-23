@@ -1,4 +1,4 @@
-## Ce répertoire contient les containers docker pour chaque brique de la solution: 
+## Ce répertoire contient les containers docker pour chaque brique de la solution mais aussi la construction des images docker pour les DAGs: 
 1- Network bridge
 ```shell
 docker network create bridge_test_container
@@ -20,4 +20,13 @@ docker run --rm --name simu_request --env-file .env --network bridge_test_contai
 docker build -t adrien157/app_streamlit -f docker/dockerfile.app_streamlit .
 docker push adrien157/app_streamlit:latest
 docker run --rm --name app_streamlit --env-file .env -p 8501:8501 --network bridge_test_container adrien157/app_streamlit:latest
+```
+5- Répertoires pour la création des images servant dans les DAGs airflow
+```shell
+docker image build . -t matthieu247/load_data -f docker/load_model/dockerfile
+docker push matthieu247/load_data
+docker image build . -t matthieu247/register -f docker/register_model/dockerfile
+docker push matthieu247/register
+docker image build . -t matthieu247/train_accoustic_model -f docker/train_model/dockerfile
+docker push matthieu247/train_accoustic_model
 ```
