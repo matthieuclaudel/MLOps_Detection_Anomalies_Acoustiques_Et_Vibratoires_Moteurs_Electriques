@@ -227,7 +227,7 @@ MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichi
 - **my-airflow-redis-0** : Cache Redis utilisé par Airflow.
 - **my-airflow-scheduler-579d984dd7-9xh99** : Gestion des tâches planifiées.
 - **my-airflow-statsd-66699fb8b9-rxlg6** : Collecte des statistiques d'Airflow.
-![-](./images/Capture_airflow_dags.jpg)
+![-](./images/ui_airflow.png)
 - **my-kube-prometheus-stack-grafana**
 ![-](./images/Capture_grafana.jpg)
 ---
