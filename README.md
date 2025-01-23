@@ -345,45 +345,74 @@ Cette documentation décrit en détail les endpoints disponibles dans l'applicat
 
     ├── LICENSE
     ├── README.md          <- The top-level README for developers using this project.
+    ├── airflow
+    │   └── dags           <- Dags scripts used in the solution.
+    │       └── DAG_kube.py
+    │       └── DAG_raw_scale.py    
+    │
     ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
+    │   └── raw            <- Original, immutable, temporarily generated data dump.
     │
-    ├── logs               <- Logs from training and predicting
+    ├── docker
+    │   ├── load_model     <- Dockerfile and script to generate the image matthieu247/load_data
+    │   │   └── load_data.py
+    │   │    
+    │   ├── raw_data       <- Dockerfile and script to generate the image ludodo/mlops-dst-project-get-from-mongo:latest│
+    │   │   └── raw_data.py
+    │   │
+    │   ├── register_model <- Dockerfile and script to generate the image matthieu247/register
+    │   │   └── register_model.py
+    │   │
+    │   └── train_model    <- Dockerfile and script to generate the image matthieu247/train_accoustic_model
+    │       └── train_model.py
+    │       
+    ├── images             <- Figures to be used in reporting as HTML, PDF, LaTeX, etc.
     │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    ├── kubernetes         <- This directory contains all the yaml manifests to deploy the solution and in particular the pv, pvc 
+    │                         and the airflow_values.yaml manifest to create the data persistence
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    ├── models             <- ....
     │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
+    ├── notebooks          <- Jupyter notebooks created during the modeling research phase.
     │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
+    ├── reports         
+    │   └── figures        <- Figures to be used in reporting as HTML, PDF, LaTeX, etc.
     │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
     │
     ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
+    │   ├── main.py        <- Makes src a Python module
     │   │
+    │   ├── apps           <- Scripts for application
+    │   │   ├── streamlit
+    │   │   │   └── pages
+    │   │   │       ├── 1_Data_Visualizer.py
+    │   │   │       ├── 2_Reduction_dimension.py    
+    │   │   │       ├── 3_Model.py 
+    │   │   │       └── 4_Test_prediction.py
+    │   │   │
+    │   │   ├── app_model.py
+    │   │   ├── app_model_models.py
+    │   │   └── app_simulation.py    
+    │   │       
     │   ├── data           <- Scripts to download or generate data
     │   │   └── make_dataset.py
-    │   │
+    │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
     │   │   └── build_features.py
     │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   ├── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │   │   └── visualize.py
-    │   └── config         <- Describe the parameters used in train_model.py and predict_model.py
+    │   ├── models         <- Scripts to train models and then use trained models to make predictions
+    │   │   ├── predict_model.py
+    │   │   ├── train_model.py                     
+    │   └── main.py
+    │   
+    ├── tests          <- Scripts to create exploratory and results oriented visualizations
+    │   │  
+    │   ├── test_data.py    
+    │   ├── test_features.py  
+    │   └── test_models.py 
+    │
+    └── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
+                              generated with `pip freeze > requirements.txt`
 ---
 
 ## Bonus : Configuration des Redirections avec Traefik

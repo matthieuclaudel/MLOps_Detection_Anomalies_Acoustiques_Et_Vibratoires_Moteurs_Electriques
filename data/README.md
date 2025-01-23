@@ -16,7 +16,7 @@ Toutes les sauvegardes .pkl sont utilisées dans le DAG **train_model_dag** pour
 ## Structure
 
     ├── data
-    │   └── raw            <- Original, immutable data dump.
+    │   └── raw            <- Original, immutable, temporarily generated data dump.
 
 
 
