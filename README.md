@@ -30,7 +30,7 @@ Détection des anomalies acoustiques et vibratoires des moteurs électriques
 14. [Configuration des Redirections avec Traefik](#Bonus-:-configuration-des-redirections-avec-traefik)
 ---
 
-## Installation
+## 1. Installation
 
 ### Étapes d'installation
 
@@ -61,7 +61,7 @@ pip install -r requirements.txt
 
 ---
 
-## Utilisation
+## 2. Utilisation
 
 1. **Activer l'environnement virtuel :**
 
@@ -79,7 +79,7 @@ python main.py
 
 ---
 
-## Conteneurs Docker
+## 3. Conteneurs Docker
 
 ### Conteneurs disponibles
 
@@ -115,7 +115,7 @@ docker run --rm --name app_streamlit --env-file .env -p 8501:8501 --network brid
 
 ---
 
-## Prérequis
+## 4. Prérequis
 
 Pour utiliser ce projet, vous aurez besoin de :
 
@@ -126,7 +126,7 @@ Pour utiliser ce projet, vous aurez besoin de :
 
 ---
 
-## Installation Kubernetes
+## 5. Installation Kubernetes
 
 ### Étapes d'installation avec Helm
 
@@ -142,7 +142,8 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 curl -sfL https://get.k3s.io | sh -
 ```
 
-## Orchestration et Charts Helm
+
+## 6. Orchestration et Charts Helm
 
 📈 **Prometheus Stack :**
 
@@ -160,6 +161,23 @@ helm repo update
 helm install my-airflow apache-airflow/airflow --version 1.15.0 -f kubernetes/airflow_values.yaml
 ```
 
+Création de la persistence pour les dags
+
+```bash
+kubectl apply -f /kubernetes/airflow_dags_folder_pv.yaml
+kubectl apply -f /kubernetes/airflow_dags_folder_pvc.yaml
+```
+
+Création de la persistence pour le répertoire data/raw/ avec les pods d'airflow
+
+```bash
+kubectl apply -f /kubernetes/data-folder-pv.yaml
+kubectl apply -f /kubernetes/data-folder-pvc.yaml
+```
+
+
+
+
 **Déploiement de MongoDB (port 27017)**
 
 Pour déployer MongoDB et Mongo Express avec Helm, utilisez les commandes suivantes :
@@ -175,7 +193,7 @@ helm upgrade my-mongo-express cowboysysop/mongo-express --version 6.5.2 -f kuber
 
 MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichier `values-mongodb.yaml`.
 
-## Évaluation et Surveillance
+## 7. Évaluation et Surveillance
 
 ### Évaluation en Production
 
@@ -205,7 +223,7 @@ MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichi
 
 ---
 
-## Pods Créés
+## 8. Pods Créés
 
 🚀 Voici les pods actifs et leurs fonctions principales :
 
@@ -232,7 +250,7 @@ MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichi
 ![-](./images/Capture_grafana.jpg)
 ---
 
-## Architecture Globale
+## 9. Architecture Globale
 
 🎨 **Schéma de l'architecture technique** :
 
@@ -311,7 +329,7 @@ Cette documentation décrit en détail les endpoints disponibles dans l'applicat
 
 ---
 
-## ℹ️ **Informations complémentaires**
+## ℹ️ 10. **Informations complémentaires**
 
 ### **Bibliothèques principales utilisées :**
 
@@ -336,12 +354,12 @@ Cette documentation décrit en détail les endpoints disponibles dans l'applicat
 
 ---
 
-## Contributions
+## 11. Contributions
 
 🤝 Les contributions sont les bienvenues ! Veuillez soumettre vos propositions via des pull requests sur le dépôt GitHub.
 
 ---
-## Repository Tree
+## 12. Repository Tree
 
     ├── LICENSE
     ├── README.md          <- The top-level README for developers using this project.
@@ -415,7 +433,7 @@ Cette documentation décrit en détail les endpoints disponibles dans l'applicat
                               generated with `pip freeze > requirements.txt`
 ---
 
-## Bonus : Configuration des Redirections avec Traefik
+## 13. Bonus : Configuration des Redirections avec Traefik
 
 ### Routes Configurées
 
