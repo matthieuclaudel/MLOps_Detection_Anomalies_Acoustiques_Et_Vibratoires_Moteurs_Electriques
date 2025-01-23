@@ -157,7 +157,7 @@ helm install my-kube-prometheus-stack prometheus-community/kube-prometheus-stack
 ```bash
 helm repo add apache-airflow https://airflow.apache.org/
 helm repo update
-helm install my-airflow apache-airflow/airflow --version 1.15.0
+helm install my-airflow apache-airflow/airflow --version 1.15.0 -f kubernetes/airflow_values.yaml
 ```
 
 **Déploiement de MongoDB (port 27017)**
