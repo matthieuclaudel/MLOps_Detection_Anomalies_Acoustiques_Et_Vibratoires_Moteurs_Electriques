@@ -63,7 +63,7 @@ def load_models(name = 'model_docker'):
         print(f"Modèle non trouvé à {model_uri}. Téléchargement depuis DagsHubs-MLflow...")
         # Load the model
         model = mlflow.sklearn.load_model(model_uri)
-        os.makedirs(os.path.dirname(f"models/{name}/{version}.pkl)"))
+        os.makedirs(os.path.dirname(f"models/{name}/{version}.pkl)"),exist_ok=True)
         with open(f"models/{name}/{version}.pkl", "wb") as f:
             pickle.dump(model, f)
         print("Modèle téléchargé et sauvegardé en Pickle.")
@@ -98,7 +98,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=1440)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -211,7 +211,7 @@ async def get_version():
     return {"version standard scaler" : version_sc , "version model" : version_model }
 
 # Endpoint pour Mettre à jour les versions du modèle à partir dagshub.
-@app.put("/relaod",tags=["Model"],
+@app.put("/reload",tags=["Model"],
             summary="Recharge le dernier modèle validé dans le cloud",
             description="Viens chercher le dernier modèle et le dernier standard scalaire de mise à jour dans le cloud",)
 async def put_relaod():

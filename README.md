@@ -7,7 +7,6 @@ Détection des anomalies acoustiques et vibratoires des moteurs électriques
 - Ludovic ANDRIEUX [GitHub](https://github.com/ludodo23)
 - Matthieu CLAUDEL ([GitHub](https://github.com/matthieuclaudel) / [LinkedIn](http://www.linkedin.com/in/matthieu-claudel-8a927857))
 - Adrien PINEL [GitHub](https://github.com/Adriencalvados) / [LinkedIn](www.linkedin.com/in/adrien-pinel-machine-learning-ingenieur)
-- Harold MOUKALA MITATI [GitHub](https://github.com/Ngulumanua)
 
 ## Architecture de l'application
 
@@ -215,6 +214,7 @@ MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichi
 - **my-kube-prometheus-stack-operator**
 - **my-kube-prometheus-stack-prometheus-node-exporter**
 - **my-mongo-express**
+![-](./images/Capture_mongoDB.jpg)
 - **my-mongodb**
 - **prometheus-my-kube-prometheus-stack-prometheus**
 - **app-streamlit-deployment-599d5b7b5f-xcckj** : Interface utilisateur pour la visualisation des prédictions.

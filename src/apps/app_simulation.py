@@ -15,7 +15,6 @@ import time
 import requests
 import json
 from dotenv import load_dotenv
-load_dotenv()
 print(f"Version de Python : {sys.version}")
 # Fonctions
 def import_dataset(file_path, **kwargs): 
@@ -24,26 +23,39 @@ def import_dataset(file_path, **kwargs):
     return df
    
 # Function to get data API at a specific page
-def fetch_job(API_URL, datas,headers): 
+def fetch_job(API_URL, datas,headers,API_USER, API_PWD): 
+    ENDPOINT = "/predict"
     val=datas["Mesure_CNI"].get("G14_vib_up")
-    logger.info(f"URL d'appel = {API_URL}/ data G14_vib_up = {val}")
-    response = requests.post(f"{API_URL}/", json=datas, headers=headers)
+    logger.info(f"URL d'appel = {API_URL+ENDPOINT}/ data G14_vib_up = {val}")
+    response = requests.post(f"{API_URL+ENDPOINT}/", json=datas, headers=headers)
     logger.info(f"response.status_code : {response.status_code} reason : {response.reason[:100]} URL : {response.url[:70]} content : {response.content[:70]}")
     if response.status_code == 200: 
-        data = response.json()
-        logger.info(f"response.json : {data}")
-        return
+        return response.status_code
     else:
         logger.warning("Failed to fetch data:", response.status_code)
         time.sleep(1)
-        response = requests.post(f"{API_URL}/", json=datas, headers=headers)
+        response = requests.post(f"{API_URL+ENDPOINT}/", json=datas, headers=headers)
         if response.status_code == 200: 
             data = response.json()
             logger.info(f"response.json : {data}")
-            return
+            return response.status_code
         else:
             logger.error("Failed again to fetch data:", response.status_code)
-            return
+            return response.status_code
+def credentials(user, pwd,url,): 
+     # Send login request to get an access token
+    auth_response = requests.post(url + "/token", data={"username": user, "password": pwd})
+    # Extract the access token from the response
+    if auth_response.status_code == 200: 
+        access_token = json.loads(auth_response.text)["access_token"]
+        # Set headers for authenticated request
+        headers = {"Authorization": f"Bearer {access_token}"}
+        logger.info(f"Authorization: Bearer {access_token}")
+    else:
+        print(auth_response.url+auth_response.text)
+        logger.error("Failed to authenticate with API : "+auth_response.text+user)
+        exit(402)
+    return headers
 # Fonction principale
 def main(input_filepath='./data/raw'): 
     """
@@ -51,7 +63,7 @@ def main(input_filepath='./data/raw'):
     Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in../preprocessed).
     """
-    ENDPOINT = "/predict"
+    load_dotenv(verbose=True, override=True)
     logger.info('making data set from raw data')
     # Récupérer les arguments
     if len(os.getenv('API_URL')) > 1: 
@@ -63,14 +75,7 @@ def main(input_filepath='./data/raw'):
         sys.exit(1)
     
     df = import_dataset(input_filepath, sep=';', decimal=',', index_col="index")
-    # Send login request to get an access token
-    auth_response = requests.post(API_URL + "/token", data={"username": API_USER, "password": API_PWD})
-    # Extract the access token from the response
-    if auth_response.status_code == 200: 
-        access_token = json.loads(auth_response.text)["access_token"]
-        # Set headers for authenticated request
-        headers = {"Authorization": f"Bearer {access_token}"}
-
+    headers=credentials(API_USER, API_PWD,API_URL)
     try:
         while True:
             # Code à exécuter à chaque itération
@@ -81,7 +86,10 @@ def main(input_filepath='./data/raw'):
             # Convertir la ligne en dictionnaire
             ligne_dict={}
             ligne_dict["Mesure_CNI"] = ligne_aleatoire.to_dict(orient='records')[0]
-            fetch_job(API_URL+ENDPOINT,ligne_dict,headers)
+            error=fetch_job(API_URL,ligne_dict,headers,API_USER, API_PWD)
+            if error == 401: 
+                headers=credentials(API_USER, API_PWD,API_URL)
+
 
     except KeyboardInterrupt:
         # Capture l'interruption manuelle (Ctrl+C)
