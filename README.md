@@ -10,7 +10,7 @@ Détection des anomalies acoustiques et vibratoires des moteurs électriques
 
 ## Architecture de l'application
 
-![Architecture](./data/Archi.png)
+![Architecture](./images/Archi.png)
 
 ## Table des Matières
 
