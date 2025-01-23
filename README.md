@@ -207,9 +207,13 @@ MongoDB est configuré pour fonctionner avec les valeurs définies dans le fichi
 - Une fois prêtes, les données sont stockées pour un usage ultérieur dans les phases de réentraînement.
 - Un nouveau modèle validé est automatiquement rechargé dans les pods concernés après chaque itération de réentraînement. ⚡
 
+![-](./images/mlflow_experiment.png)
+
 ### Collecte et CI/CD
 
 1. Airflow applique des pipelines CI/CD pour intégrer des processus automatisés d'entraînement et de déploiement.
+![-](./images/dag_train_model.png)
+
 2. Une surveillance continue permet de détecter les anomalies dans les données et d'améliorer les performances des modèles au fil du temps. 🛠️
 
 ### Surveillance des Performances
