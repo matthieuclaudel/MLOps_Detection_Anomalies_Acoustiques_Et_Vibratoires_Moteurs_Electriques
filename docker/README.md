@@ -23,10 +23,12 @@ docker run --rm --name app_streamlit --env-file .env -p 8501:8501 --network brid
 ```
 5- Répertoires pour la création des images servant dans les DAGs airflow
 ```shell
-docker image build . -t matthieu247/load_data -f docker/load_model/dockerfile
+docker image build . -t ludodo/mlops-dst-project-get-from-mongo -f docker/raw_data/Dockerfile
+docker push ludodo/mlops-dst-project-get-from-mongo
+docker image build . -t matthieu247/load_data -f docker/load_model/Dockerfile
 docker push matthieu247/load_data
-docker image build . -t matthieu247/register -f docker/register_model/dockerfile
+docker image build . -t matthieu247/register -f docker/register_model/Dockerfile
 docker push matthieu247/register
-docker image build . -t matthieu247/train_accoustic_model -f docker/train_model/dockerfile
+docker image build . -t matthieu247/train_accoustic_model -f docker/train_model/Dockerfile
 docker push matthieu247/train_accoustic_model
 ```
