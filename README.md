@@ -10,7 +10,7 @@ Détection des anomalies acoustiques et vibratoires des moteurs électriques
 
 ## Architecture de l'application
 
-![Architecture](./images/Archi.png)
+![Architecture](./images/project_accoustic.png)
 
 ## Table des Matières
 
@@ -144,6 +144,10 @@ curl -sfL https://get.k3s.io | sh -
 
 
 ## 6. Orchestration et Charts Helm
+
+
+![Architecture fastapi](./images/Diagramme-2025-01-06-2022.png)
+
 
 📈 **Prometheus Stack :**
 
